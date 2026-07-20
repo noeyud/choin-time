@@ -285,7 +285,7 @@ input,textarea{font-family:inherit;outline:none;}
         <div data-screen-label="오늘의 계시" style="padding:24px 20px 28px;display:flex;flex-direction:column;gap:16px;animation:fadeUp .4s ease both;">
           <div>
             <h2 style="margin:0;font-size:24px;font-weight:800;">오늘의 계시</h2>
-            <p style="margin:6px 0 0;color:#a89e8e;font-size:13px;">앱에 담아 둔 수련 문장들 — 매일 순서가 바뀐다</p>
+            <p style="margin:6px 0 0;color:#a89e8e;font-size:13px;">{{ quotesSub }}</p>
           </div>
           <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;">
             <sc-for list="{{ tagChips }}" as="tg" hint-placeholder-count="5">
@@ -296,6 +296,9 @@ input,textarea{font-family:inherit;outline:none;}
             <sc-for list="{{ quoteCards }}" as="q" hint-placeholder-count="4">
               <div style="background:#1c1917;border:1px solid #2a2521;border-radius:16px;padding:18px 16px;">
                 <p style="margin:0;font-size:16.5px;font-weight:600;line-height:1.65;text-wrap:pretty;">“{{ q.text }}”</p>
+                <sc-if value="{{ q.hasMeta }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top:12px;font-size:12px;color:#6b6357;line-height:1.6;">{{ q.meta }}</div>
+                </sc-if>
                 <div style="display:flex;gap:6px;margin-top:8px;">
                   <sc-for list="{{ q.tags }}" as="qt" hint-placeholder-count="2">
                     <span style="font-size:11px;color:#c9865b;border:1px solid #3a2f26;border-radius:12px;padding:3px 9px;">{{ qt.name }}</span>
@@ -305,6 +308,9 @@ input,textarea{font-family:inherit;outline:none;}
                   <button onClick="{{ q.speak }}" style="padding:9px 14px;border-radius:11px;background:#26201b;border:1px solid #3a2f26;color:#e8956a;font-size:12.5px;font-weight:700;min-height:40px;">{{ q.speakLabel }}</button>
                   <button onClick="{{ q.save }}" style="padding:9px 13px;border-radius:11px;background:none;border:1px solid #3a332c;color:{{ q.saveCol }};font-size:12.5px;min-height:40px;">{{ q.saveLabel }}</button>
                   <button onClick="{{ q.share }}" style="padding:9px 13px;border-radius:11px;background:none;border:1px solid #3a332c;color:#a89e8e;font-size:12.5px;min-height:40px;">공유</button>
+                  <sc-if value="{{ q.hasUrl }}" hint-placeholder-val="{{ false }}">
+                    <a href="{{ q.url }}" target="_blank" rel="noreferrer" style="margin-left:auto;font-size:12px;color:#6b6357;text-decoration:underline;">원문</a>
+                  </sc-if>
                 </div>
               </div>
             </sc-for>
@@ -595,7 +601,7 @@ class Component extends DCLogic {
       w: typeof window !== 'undefined' ? window.innerWidth : 1200,
       screen: 'home', obStep: 1, obFields: [], obRisk: ['심야'], obNotif: true, obReason: '',
       pledge: 0, battle: null, fail: null, sheet: false, locked: false,
-      pinInput: '', pinNew: '', toast: '', qTag: '전체', speakingId: 0, pinTries: 0, pinLockUntil: 0,
+      pinInput: '', pinNew: '', toast: '', qTag: '전체', speakingId: 0, pinTries: 0, pinLockUntil: 0, liveQuotes: null, liveUpdated: '',
       s: this.load()
     };
   }
@@ -621,6 +627,9 @@ class Component extends DCLogic {
     try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
     this.syncSW(s0);
     if (typeof Notification !== 'undefined' && Notification.permission === 'granted') this.registerPeriodic();
+    fetch('./quotes.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).then(j => {
+      if (j && Array.isArray(j.items) && j.items.length >= 3) this.setState({ liveQuotes: j.items, liveUpdated: j.updated || '' });
+    }).catch(() => {});
     this._nt = setInterval(() => this.notifTick(), 60000);
     setTimeout(() => this.notifTick(), 3000);
   }
@@ -858,9 +867,10 @@ class Component extends DCLogic {
     const missionDone = s.missionDone === this.dkey(Date.now());
     const elapsed = b ? (this.seconds() - b.t) : 0;
     const allTags = ['전체', '습관', '충동', '환경', '수면', '복귀', '지루함', '위기'];
+    const live = st.liveQuotes;
     const qOff = doy % this.QUOTES.length;
-    const qsrc = this.QUOTES.slice(qOff).concat(this.QUOTES.slice(0, qOff));
-    const quotes = qsrc.filter(q => st.qTag === '전체' || q.tags.includes(st.qTag));
+    const qsrc = live || this.QUOTES.slice(qOff).concat(this.QUOTES.slice(0, qOff));
+    const quotes = qsrc.filter(q => st.qTag === '전체' || (q.tags || []).includes(st.qTag));
     const auraByRank = [0.25, 0.4, 0.55, 0.7, 0.85, 1];
     const aura = (this.props.mascotAura === '최대') ? 1 : auraByRank[ri];
     const trainRows = [];
@@ -946,8 +956,15 @@ class Component extends DCLogic {
         name, pick: () => this.setState({ qTag: name }),
         bg: st.qTag === name ? '#3a2517' : '#1c1917', bd: st.qTag === name ? '#c96f3b' : '#2a2521', col: st.qTag === name ? '#e8956a' : '#a89e8e'
       })),
+      quotesSub: st.liveQuotes
+        ? ('현자타임 갤러리 개념글에서 수집 · ' + (st.liveUpdated || '').slice(0, 16))
+        : '수집한 글을 불러오지 못했다 — 기본 수련 문장을 보여준다',
       quoteCards: quotes.map(q => ({
-        text: q.text, title: q.title, date: q.date, nick: q.nick, url: q.url,
+        text: q.text,
+        hasMeta: !!(q.title && q.nick),
+        meta: q.title ? (q.title + (q.date ? ' · ' + q.date : '') + (q.nick ? ' · ' + q.nick : '')) : '',
+        hasUrl: !!q.url,
+        url: q.url || '', title: q.title, date: q.date, nick: q.nick, url: q.url,
         tags: q.tags.map(t => ({ name: t })),
         speakLabel: st.speakingId === q.id ? '■ 멈춤' : '▶ 무명의 목소리',
         speak: () => this.speak(q),
