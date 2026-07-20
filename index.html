@@ -174,6 +174,12 @@ input,textarea{font-family:inherit;outline:none;}
             <div style="font-size:11px;letter-spacing:.32em;color:#6b6357;">超人時間</div>
             <button onClick="{{ openSettings }}" aria-label="설정" style="background:none;border:none;color:#6b6357;font-size:22px;line-height:1;padding:6px;">⋯</button>
           </div>
+          <sc-if value="{{ showBackupNag }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:12px;background:#221a12;border:1px solid #4a3527;border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;">
+              <div style="flex:1;font-size:12.5px;color:#d9b48f;line-height:1.5;">{{ backupNagText }}</div>
+              <button onClick="{{ doBackupNow }}" style="padding:8px 12px;border-radius:10px;background:#8a3d24;border:none;color:#f0e6d6;font-size:12px;font-weight:700;flex-shrink:0;">지금 백업</button>
+            </div>
+          </sc-if>
           <div style="text-align:center;margin-top:14px;">
             <div style="font-size:56px;font-weight:900;letter-spacing:-.03em;line-height:1;">{{ dayLabel }}</div>
             <div style="margin-top:10px;display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#a89e8e;">
@@ -279,9 +285,8 @@ input,textarea{font-family:inherit;outline:none;}
         <div data-screen-label="오늘의 계시" style="padding:24px 20px 28px;display:flex;flex-direction:column;gap:16px;animation:fadeUp .4s ease both;">
           <div>
             <h2 style="margin:0;font-size:24px;font-weight:800;">오늘의 계시</h2>
-            <p style="margin:6px 0 0;color:#a89e8e;font-size:13px;">현자타임 갤러리 ‘초월자’ 탭 개념글에서 하루 1–2회 자동 수집</p>
+            <p style="margin:6px 0 0;color:#a89e8e;font-size:13px;">앱에 담아 둔 수련 문장들 — 매일 순서가 바뀐다</p>
           </div>
-          <div style="border:1px solid #3a332c;border-radius:10px;padding:9px 12px;font-size:12px;color:#6b6357;">프로토타입 예시 데이터 — 실제 수집된 글이 아니다</div>
           <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;">
             <sc-for list="{{ tagChips }}" as="tg" hint-placeholder-count="5">
               <button onClick="{{ tg.pick }}" style="flex-shrink:0;padding:8px 14px;border-radius:20px;font-size:13px;background:{{ tg.bg }};border:1px solid {{ tg.bd }};color:{{ tg.col }};min-height:36px;">{{ tg.name }}</button>
@@ -291,7 +296,6 @@ input,textarea{font-family:inherit;outline:none;}
             <sc-for list="{{ quoteCards }}" as="q" hint-placeholder-count="4">
               <div style="background:#1c1917;border:1px solid #2a2521;border-radius:16px;padding:18px 16px;">
                 <p style="margin:0;font-size:16.5px;font-weight:600;line-height:1.65;text-wrap:pretty;">“{{ q.text }}”</p>
-                <div style="margin-top:12px;font-size:12px;color:#6b6357;line-height:1.6;">{{ q.title }} · {{ q.date }} · {{ q.nick }}</div>
                 <div style="display:flex;gap:6px;margin-top:8px;">
                   <sc-for list="{{ q.tags }}" as="qt" hint-placeholder-count="2">
                     <span style="font-size:11px;color:#c9865b;border:1px solid #3a2f26;border-radius:12px;padding:3px 9px;">{{ qt.name }}</span>
@@ -301,7 +305,6 @@ input,textarea{font-family:inherit;outline:none;}
                   <button onClick="{{ q.speak }}" style="padding:9px 14px;border-radius:11px;background:#26201b;border:1px solid #3a2f26;color:#e8956a;font-size:12.5px;font-weight:700;min-height:40px;">{{ q.speakLabel }}</button>
                   <button onClick="{{ q.save }}" style="padding:9px 13px;border-radius:11px;background:none;border:1px solid #3a332c;color:{{ q.saveCol }};font-size:12.5px;min-height:40px;">{{ q.saveLabel }}</button>
                   <button onClick="{{ q.share }}" style="padding:9px 13px;border-radius:11px;background:none;border:1px solid #3a332c;color:#a89e8e;font-size:12.5px;min-height:40px;">공유</button>
-                  <a href="{{ q.url }}" target="_blank" rel="noreferrer" style="margin-left:auto;font-size:12px;color:#6b6357;text-decoration:underline;">원문</a>
                 </div>
               </div>
             </sc-for>
@@ -501,7 +504,16 @@ input,textarea{font-family:inherit;outline:none;}
           <div style="font-size:13px;color:#a89e8e;margin-bottom:8px;">알림 표시 문구 — 민감한 단어는 알림에 절대 노출되지 않는다</div>
           <input value="{{ notifText }}" onChange="{{ setNotifText }}" style="width:100%;background:#131110;border:1px solid #2a2521;border-radius:12px;color:#eae2d3;padding:12px 14px;font-size:15px;">
         </div>
-        <div style="font-size:12px;color:#6b6357;line-height:1.6;">기록은 이 기기 안에만 저장된다. 서버로 전송되지 않는다.</div>
+        <div>
+          <div style="font-size:13px;color:#a89e8e;margin-bottom:8px;">위험 시간대 알림</div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="flex:1;font-size:12.5px;color:#a89e8e;line-height:1.5;">{{ notifStateLabel }}</div>
+            <button onClick="{{ toggleNotif }}" style="width:52px;height:30px;border-radius:15px;border:none;background:{{ settNotifBg }};position:relative;flex-shrink:0;">
+              <div style="position:absolute;top:3px;left:{{ settNotifKnob }};width:24px;height:24px;border-radius:50%;background:#eae2d3;transition:left .2s;"></div>
+            </button>
+          </div>
+        </div>
+        <div style="font-size:12px;color:#6b6357;line-height:1.6;">기록은 이 기기 안에만 저장된다. 서버로 전송되지 않는다. PIN은 암호화 해시로 저장되며 앱 열람만 막는다 — 기기 잠금과 함께 써라. 마지막 백업: {{ lastBackupLabel }}</div>
         <div style="display:flex;gap:8px;">
           <button onClick="{{ exportData }}" style="flex:1;height:46px;border-radius:12px;background:#131110;border:1px solid #3a332c;color:#a89e8e;font-size:14px;font-weight:600;">데이터 백업</button>
           <button onClick="{{ importData }}" style="flex:1;height:46px;border-radius:12px;background:#131110;border:1px solid #3a332c;color:#a89e8e;font-size:14px;font-weight:600;">백업 복원</button>
@@ -563,24 +575,32 @@ class Component extends DCLogic {
       { d: 365, r: '초인 Ⅲ', q: '일 년. 무명은 더 이상 필요 없다.' }
     ];
     this.QUOTES = [
-      { id: 1, text: '지루함을 견디는 능력이 곧 절제력이다. 심심할 때 손이 어디로 가는지가 네 수준이다.', title: '30일 넘기고 느낀 점', date: '2026.07.11', nick: '무회귀', tags: ['습관', '지루함'], url: 'https://gall.dcinside.com' },
-      { id: 2, text: '충동은 파도다. 90초만 지나면 반드시 낮아진다. 세지 말고 그냥 지나가는 걸 봐라.', title: '위기 넘기는 법 정리해준다', date: '2026.07.10', nick: '파도관찰자', tags: ['충동', '위기'], url: 'https://gall.dcinside.com' },
-      { id: 3, text: '트리거를 이기려 하지 마라. 트리거가 없는 방을 만들어라. 의지력은 환경을 못 이긴다.', title: '환경 세팅이 전부다', date: '2026.07.08', nick: '방장수', tags: ['환경'], url: 'https://gall.dcinside.com' },
-      { id: 4, text: '실패한 날 밤에 계획을 다시 쓰지 마라. 아침에 써라. 밤의 다짐은 대부분 거짓이다.', title: '리셋 후 복귀 루틴', date: '2026.07.06', nick: '아침형절제', tags: ['복귀', '습관'], url: 'https://gall.dcinside.com' },
-      { id: 5, text: '몸이 피곤하면 뇌는 자극을 찾는다. 일찍 자는 것이 최고의 방어다.', title: '수면이 8할이다', date: '2026.07.03', nick: '초월대기자', tags: ['수면', '환경'], url: 'https://gall.dcinside.com' },
-      { id: 6, text: '기록이 아니라 방향이 전부다. 어제보다 오늘 덜 흔들렸으면 이긴 거다.', title: '숫자에 집착하지 마라', date: '2026.06.29', nick: '무명수련생', tags: ['복귀', '충동'], url: 'https://gall.dcinside.com' }
+      { id: 1, text: '지루함을 견디는 능력이 곧 절제력이다. 심심할 때 손이 어디로 가는지가 네 수준이다.', tags: ['습관', '지루함'] },
+      { id: 2, text: '충동은 파도다. 90초만 지나면 반드시 낮아진다. 세지 말고 그냥 지나가는 걸 봐라.', tags: ['충동', '위기'] },
+      { id: 3, text: '트리거를 이기려 하지 마라. 트리거가 없는 방을 만들어라. 의지력은 환경을 못 이긴다.', tags: ['환경'] },
+      { id: 4, text: '실패한 날 밤에 계획을 다시 쓰지 마라. 아침에 써라. 밤의 다짐은 대부분 거짓이다.', tags: ['복귀', '습관'] },
+      { id: 5, text: '몸이 피곤하면 뇌는 자극을 찾는다. 일찍 자는 것이 최고의 방어다.', tags: ['수면', '환경'] },
+      { id: 6, text: '기록이 아니라 방향이 전부다. 어제보다 오늘 덜 흔들렸으면 이긴 거다.', tags: ['복귀', '충동'] },
+      { id: 7, text: '충동을 느끼는 것과 따르는 것 사이에는 틈이 있다. 훈련은 그 틈을 넓히는 일이다.', tags: ['충동', '습관'] },
+      { id: 8, text: '가장 위험한 문장은 "마지막으로 한 번만"이다. 그 한 번이 언제나 시작이다.', tags: ['위기', '충동'] },
+      { id: 9, text: '휴대폰을 침대 밖에 두는 것 하나가 의지력 백 번보다 낫다.', tags: ['환경', '수면'] },
+      { id: 10, text: '실패를 기록하는 자는 다시 시작할 수 있다. 숨기는 자는 같은 자리로 돌아간다.', tags: ['복귀', '습관'] },
+      { id: 11, text: '심심함은 적이 아니다. 심심함을 견디지 못하는 몸이 적이다.', tags: ['지루함', '습관'] },
+      { id: 12, text: '방은 밝게, 문은 열어 둬라. 어둠과 밀실은 언제나 충동의 편이다.', tags: ['환경', '위기'] },
+      { id: 13, text: '스트릭은 목적이 아니라 온도계다. 숫자가 아니라 방향을 지켜라.', tags: ['습관', '복귀'] },
+      { id: 14, text: '지금 10분을 버티는 가장 쉬운 방법은 몸을 움직이는 것이다. 뇌는 두 가지를 동시에 못 한다.', tags: ['충동', '위기'] }
     ];
     this.CAUSES = ['술', '심야', '스트레스', '외로움', 'SNS', '침대에서 휴대폰', '기타'];
     this.state = {
       w: typeof window !== 'undefined' ? window.innerWidth : 1200,
       screen: 'home', obStep: 1, obFields: [], obRisk: ['심야'], obNotif: true, obReason: '',
       pledge: 0, battle: null, fail: null, sheet: false, locked: false,
-      pinInput: '', pinNew: '', toast: '', qTag: '전체', speakingId: 0,
+      pinInput: '', pinNew: '', toast: '', qTag: '전체', speakingId: 0, pinTries: 0, pinLockUntil: 0,
       s: this.load()
     };
   }
   def() {
-    return { onboarded: false, fields: [], reason: '', risk: [], notif: true, streakStart: null, totalPast: 0, longest: 0, power: 0, conv: 0, events: {}, saved: [], lastFail: null, pendingCheck: null, missionDone: '', pin: '', notifText: '수련 시간이다' };
+    return { onboarded: false, fields: [], reason: '', risk: [], notif: true, streakStart: null, totalPast: 0, longest: 0, power: 0, conv: 0, events: {}, saved: [], lastFail: null, pendingCheck: null, missionDone: '', pin: '', pinHash: '', lastBackup: 0, lastNotifDay: '', notifText: '수련 시간이다' };
   }
   load() {
     try { return Object.assign(this.def(), JSON.parse(localStorage.getItem('choin_v1') || '{}')); } catch (e) { return this.def(); }
@@ -590,15 +610,23 @@ class Component extends DCLogic {
     fn(s);
     this.setState({ s });
     try { localStorage.setItem('choin_v1', JSON.stringify(s)); } catch (e) {}
+    this.syncSW(s);
   }
   componentDidMount() {
     this._onR = () => this.setState({ w: window.innerWidth });
     window.addEventListener('resize', this._onR);
-    if (this.state.s.pin) this.setState({ locked: true });
+    const s0 = this.state.s;
+    if (s0.pin && !s0.pinHash) { this.sha(s0.pin).then(h => this.mut(ss => { ss.pinHash = h; ss.pin = ''; })); }
+    if (s0.pin || s0.pinHash) this.setState({ locked: true });
+    try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
+    this.syncSW(s0);
+    if (typeof Notification !== 'undefined' && Notification.permission === 'granted') this.registerPeriodic();
+    this._nt = setInterval(() => this.notifTick(), 60000);
+    setTimeout(() => this.notifTick(), 3000);
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this._onR);
-    clearInterval(this._bt); clearInterval(this._pl); clearTimeout(this._tt);
+    clearInterval(this._bt); clearInterval(this._pl); clearTimeout(this._tt); clearInterval(this._nt);
   }
   dkey(t) { const d = new Date(t); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
   days() {
@@ -611,6 +639,74 @@ class Component extends DCLogic {
   rankIdx(d) { let i = 0; this.RANKS.forEach((r, j) => { if (d >= r[0]) i = j; }); return i; }
   showToast(m) { clearTimeout(this._tt); this.setState({ toast: m }); this._tt = setTimeout(() => this.setState({ toast: '' }), 2400); }
   seconds() { return this.props.battleSeconds ?? 90; }
+  sha(t) {
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode('choin::' + t))
+      .then(b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join(''));
+  }
+  riskWindow(now) {
+    const r = this.state.s.risk || [];
+    const h = now.getHours(), day = now.getDay();
+    if (r.includes('심야') && (h >= 22 || h < 2)) return '심야';
+    if (r.includes('아침') && h >= 6 && h < 9) return '아침';
+    if (r.includes('주말') && (day === 0 || day === 6) && h >= 20) return '주말';
+    return null;
+  }
+  notifTick() {
+    const s = this.state.s;
+    if (!s.onboarded || !s.notif) return;
+    if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+    const now = new Date();
+    const w = this.riskWindow(now);
+    if (!w) return;
+    const k = this.dkey(Date.now()) + ':' + w;
+    if (s.lastNotifDay === k) return;
+    this.mut(ss => { ss.lastNotifDay = k; });
+    navigator.serviceWorker.getRegistration().then(reg => {
+      if (reg) reg.showNotification('초인타임', { body: s.notifText || '수련 시간이다', icon: './icon-192.png', badge: './icon-192.png', tag: 'choin-risk' });
+    }).catch(() => {});
+  }
+  enableNotifPerm() {
+    if (typeof Notification === 'undefined') { this.showToast('이 브라우저는 알림을 지원하지 않는다'); return; }
+    if (Notification.permission === 'granted') { this.registerPeriodic(); this.syncSW(this.state.s); return; }
+    Notification.requestPermission().then(p => {
+      this.setState({});
+      if (p === 'granted') { this.showToast('알림이 켜졌다'); this.registerPeriodic(); this.syncSW(this.state.s); }
+      else this.showToast('알림 권한이 허용되지 않았다');
+    });
+  }
+  registerPeriodic() {
+    if (!('serviceWorker' in navigator)) return;
+    navigator.serviceWorker.getRegistration().then(reg => {
+      if (!reg || !('periodicSync' in reg)) return;
+      reg.periodicSync.register('choin-remind', { minInterval: 6 * 3600 * 1000 }).catch(() => {});
+    }).catch(() => {});
+  }
+  syncSW(sOpt) {
+    try {
+      const s = sOpt || this.state.s;
+      const req = indexedDB.open('choin-sw', 1);
+      req.onupgradeneeded = () => { req.result.createObjectStore('kv'); };
+      req.onsuccess = () => {
+        try {
+          const tx = req.result.transaction('kv', 'readwrite');
+          tx.objectStore('kv').put({ notif: s.notif, notifText: s.notifText, risk: s.risk, lastNotifDay: s.lastNotifDay }, 'cfg');
+        } catch (e) {}
+      };
+    } catch (e) {}
+  }
+  exportNow() {
+    try {
+      const data = localStorage.getItem('choin_v1') || '{}';
+      const blob = new Blob([data], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'choin-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+      this.mut(ss => { ss.lastBackup = Date.now(); });
+      this.showToast('백업 파일이 저장되었다');
+    } catch (e) { this.showToast('백업 실패'); }
+  }
   chips(list, sel, toggle) {
     return list.map(name => {
       const on = sel.includes(name);
@@ -762,7 +858,9 @@ class Component extends DCLogic {
     const missionDone = s.missionDone === this.dkey(Date.now());
     const elapsed = b ? (this.seconds() - b.t) : 0;
     const allTags = ['전체', '습관', '충동', '환경', '수면', '복귀', '지루함', '위기'];
-    const quotes = this.QUOTES.filter(q => st.qTag === '전체' || q.tags.includes(st.qTag));
+    const qOff = doy % this.QUOTES.length;
+    const qsrc = this.QUOTES.slice(qOff).concat(this.QUOTES.slice(0, qOff));
+    const quotes = qsrc.filter(q => st.qTag === '전체' || q.tags.includes(st.qTag));
     const auraByRank = [0.25, 0.4, 0.55, 0.7, 0.85, 1];
     const aura = (this.props.mascotAura === '최대') ? 1 : auraByRank[ri];
     const trainRows = [];
@@ -780,8 +878,15 @@ class Component extends DCLogic {
           if (!k) return;
           let p = k === '←' ? pin.slice(0, -1) : (pin + k).slice(0, 4);
           if (p.length === 4) {
-            if (p === s.pin) { this.setState({ locked: false, pinInput: '' }); return; }
-            this.showToast('틀렸다. 다시.'); p = '';
+            if (Date.now() < st.pinLockUntil) { this.showToast('잠시 후 다시 시도해라'); this.setState({ pinInput: '' }); return; }
+            this.setState({ pinInput: p });
+            this.sha(p).then(h => {
+              if (h === this.state.s.pinHash) { this.setState({ locked: false, pinInput: '', pinTries: 0 }); return; }
+              const tries = (this.state.pinTries || 0) + 1;
+              if (tries >= 5) { this.setState({ pinTries: 0, pinLockUntil: Date.now() + 30000, pinInput: '' }); this.showToast('5회 실패 — 30초 뒤에 다시 시도해라'); }
+              else { this.setState({ pinTries: tries, pinInput: '' }); this.showToast('틀렸다. 다시. (' + tries + '/5)'); }
+            });
+            return;
           }
           this.setState({ pinInput: p });
         }
@@ -796,7 +901,11 @@ class Component extends DCLogic {
       obFieldChips: this.chips(this.FIELDS, st.obFields, n => this.setState({ obFields: st.obFields.includes(n) ? st.obFields.filter(x => x !== n) : [...st.obFields, n] })),
       obRiskChips: this.chips(['심야', '아침', '스트레스 후', '주말', '혼자 있을 때'], st.obRisk, n => this.setState({ obRisk: st.obRisk.includes(n) ? st.obRisk.filter(x => x !== n) : [...st.obRisk, n] })),
       obNotif: st.obNotif, obNotifBg: st.obNotif ? '#8a3d24' : '#2a2521', obNotifKnob: st.obNotif ? '25px' : '3px',
-      obToggleNotif: () => this.setState({ obNotif: !st.obNotif }),
+      obToggleNotif: () => {
+        const next = !st.obNotif;
+        this.setState({ obNotif: next });
+        if (next) this.enableNotifPerm();
+      },
       obNotifText: s.notifText,
       obReason: st.obReason, setObReason: e => this.setState({ obReason: e.target.value }),
       pledgeW: Math.min(100, st.pledge) + '%',
@@ -898,31 +1007,23 @@ class Component extends DCLogic {
       closeSettings: () => this.setState({ sheet: false }),
       stop: e => e.stopPropagation(),
       pinNew: st.pinNew, setPinNew: e => this.setState({ pinNew: e.target.value.replace(/\D/g, '').slice(0, 4) }),
-      pinPlaceholder: s.pin ? '설정됨 — 변경하려면 입력' : '미설정',
-      hasPin: !!s.pin,
+      pinPlaceholder: (s.pinHash || s.pin) ? '설정됨 — 변경하려면 입력' : '미설정',
+      hasPin: !!(s.pinHash || s.pin),
       savePin: () => {
         if (st.pinNew.length !== 4) { this.showToast('4자리 숫자가 필요하다'); return; }
-        this.mut(ss => { ss.pin = st.pinNew; }); this.setState({ pinNew: '' }); this.showToast('PIN이 설정되었다');
+        this.sha(st.pinNew).then(h => {
+          this.mut(ss => { ss.pinHash = h; ss.pin = ''; });
+          this.setState({ pinNew: '' }); this.showToast('PIN이 설정되었다');
+        });
       },
-      clearPin: () => { this.mut(ss => { ss.pin = ''; }); this.showToast('PIN이 해제되었다'); },
+      clearPin: () => { this.mut(ss => { ss.pinHash = ''; ss.pin = ''; }); this.showToast('PIN이 해제되었다'); },
       notifText: s.notifText, setNotifText: e => { const v = e.target.value; this.mut(ss => { ss.notifText = v; }); },
       resetAll: () => {
         this.mut(ss => Object.assign(ss, this.def()));
         this.setState({ sheet: false, obStep: 1, screen: 'home' });
         this.showToast('모든 기록이 초기화되었다');
       },
-      exportData: () => {
-        try {
-          const data = localStorage.getItem('choin_v1') || '{}';
-          const blob = new Blob([data], { type: 'application/json' });
-          const a = document.createElement('a');
-          a.href = URL.createObjectURL(blob);
-          a.download = 'choin-backup-' + new Date().toISOString().slice(0, 10) + '.json';
-          document.body.appendChild(a); a.click(); a.remove();
-          setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-          this.showToast('백업 파일이 저장되었다');
-        } catch (e) { this.showToast('백업 실패'); }
-      },
+      exportData: () => this.exportNow(),
       importData: () => {
         const inp = document.createElement('input');
         inp.type = 'file'; inp.accept = '.json,application/json';
@@ -941,6 +1042,24 @@ class Component extends DCLogic {
           rd.readAsText(file);
         };
         inp.click();
+      },
+      showBackupNag: s.onboarded && (s.totalPast + d) >= 7 && (!s.lastBackup || (Date.now() - s.lastBackup) > 14 * 864e5),
+      backupNagText: s.lastBackup ? ('마지막 백업 후 ' + Math.floor((Date.now() - s.lastBackup) / 864e5) + '일 지났다. 기록을 지켜라.') : '기록이 쌓였다. 백업 파일을 만들어 둬라.',
+      doBackupNow: () => this.exportNow(),
+      lastBackupLabel: s.lastBackup ? new Date(s.lastBackup).toLocaleDateString('ko-KR') : '없음',
+      notifStateLabel: (typeof Notification === 'undefined')
+        ? '이 브라우저는 알림을 지원하지 않는다 (iPhone은 홈 화면에 추가한 뒤 iOS 16.4 이상 필요)'
+        : (Notification.permission === 'denied')
+          ? '브라우저에서 차단됨 — 사이트 설정에서 알림을 허용해야 한다'
+          : (s.notif && Notification.permission === 'granted')
+            ? ('켜짐 — 위험 시간대(' + ((s.risk || []).filter(x => ['심야', '아침', '주말'].includes(x)).join('·') || '미설정') + ')에 알린다. 앱이 열려 있거나 설치된 상태에서 동작한다.')
+            : '꺼짐 — 켜면 권한을 요청한다',
+      settNotifBg: (s.notif && typeof Notification !== 'undefined' && Notification.permission === 'granted') ? '#8a3d24' : '#2a2521',
+      settNotifKnob: (s.notif && typeof Notification !== 'undefined' && Notification.permission === 'granted') ? '25px' : '3px',
+      toggleNotif: () => {
+        const v = !s.notif;
+        this.mut(ss => { ss.notif = v; });
+        if (v) this.enableNotifPerm();
       },
       hasToast: !!st.toast, toastMsg: st.toast,
       isDesktop: st.w >= 1024
