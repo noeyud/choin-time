@@ -307,7 +307,6 @@ input,textarea{font-family:inherit;outline:none;}
                   </sc-for>
                 </div>
                 <div style="display:flex;align-items:center;gap:8px;margin-top:14px;border-top:1px solid #2a2521;padding-top:12px;">
-                  <button onClick="{{ q.speak }}" style="padding:9px 14px;border-radius:11px;background:#26201b;border:1px solid #3a2f26;color:#e8956a;font-size:12.5px;font-weight:700;min-height:40px;">{{ q.speakLabel }}</button>
                   <button onClick="{{ q.save }}" style="padding:9px 13px;border-radius:11px;background:none;border:1px solid #3a332c;color:{{ q.saveCol }};font-size:12.5px;min-height:40px;">{{ q.saveLabel }}</button>
                   <button onClick="{{ q.share }}" style="padding:9px 13px;border-radius:11px;background:none;border:1px solid #3a332c;color:#a89e8e;font-size:12.5px;min-height:40px;">공유</button>
                   <sc-if value="{{ q.hasUrl }}" hint-placeholder-val="{{ false }}">
@@ -526,7 +525,18 @@ input,textarea{font-family:inherit;outline:none;}
           <button onClick="{{ exportData }}" style="flex:1;height:46px;border-radius:12px;background:#131110;border:1px solid #3a332c;color:#a89e8e;font-size:14px;font-weight:600;">데이터 백업</button>
           <button onClick="{{ importData }}" style="flex:1;height:46px;border-radius:12px;background:#131110;border:1px solid #3a332c;color:#a89e8e;font-size:14px;font-weight:600;">백업 복원</button>
         </div>
-        <button onClick="{{ resetAll }}" style="height:46px;border-radius:12px;background:none;border:1px solid #4a2c20;color:#b0523a;font-size:14px;font-weight:600;">모든 기록 초기화</button>
+        <sc-if value="{{ resetArmed }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:10px;background:#211412;border:1px solid #4a2c20;border-radius:12px;padding:14px;">
+            <div style="font-size:13px;color:#b0523a;line-height:1.6;">정말 초기화하나? 무결일·초인력·모든 기록이 사라지고 되돌릴 수 없다. 필요하면 먼저 백업해라.</div>
+            <div style="display:flex;gap:8px;">
+              <button onClick="{{ resetCancel }}" style="flex:1;height:44px;border-radius:12px;background:#1c1917;border:1px solid #3a332c;color:#a89e8e;font-size:14px;">취소</button>
+              <button onClick="{{ resetConfirm }}" style="flex:1;height:44px;border-radius:12px;background:#7a2a1a;border:none;color:#f0e6d6;font-size:14px;font-weight:700;">영구 삭제</button>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ resetIdle }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ resetArm }}" style="height:46px;border-radius:12px;background:none;border:1px solid #4a2c20;color:#b0523a;font-size:14px;font-weight:600;">모든 기록 초기화</button>
+        </sc-if>
       </div>
     </div>
   </sc-if>
@@ -603,7 +613,7 @@ class Component extends DCLogic {
       w: typeof window !== 'undefined' ? window.innerWidth : 1200,
       screen: 'home', obStep: 1, obFields: [], obRisk: ['심야'], obNotif: true, obReason: '',
       pledge: 0, battle: null, fail: null, sheet: false, locked: false,
-      pinInput: '', pinNew: '', toast: '', qTag: '전체', speakingId: 0, pinTries: 0, pinLockUntil: 0, liveQuotes: null, liveUpdated: '',
+      pinInput: '', pinNew: '', toast: '', qTag: '전체', speakingId: 0, pinTries: 0, pinLockUntil: 0, liveQuotes: null, liveUpdated: '', resetArm: false,
       s: this.load()
     };
   }
@@ -952,7 +962,7 @@ class Component extends DCLogic {
       doMission: () => { this.mut(ss => { ss.power += 20; ss.missionDone = this.dkey(Date.now()); this.markEvent(ss, 'conv'); }); this.showToast('임무 완료. +20 초인력'); },
       startBattle: () => this.startBattle(),
       openFail: () => this.openFail(),
-      openSettings: () => this.setState({ sheet: true, pinNew: '' }),
+      openSettings: () => this.setState({ sheet: true, pinNew: '', resetArm: false }),
       trainRows,
       tagChips: allTags.map(name => ({
         name, pick: () => this.setState({ qTag: name }),
@@ -968,8 +978,6 @@ class Component extends DCLogic {
         hasUrl: !!q.url,
         url: q.url || '', title: q.title, date: q.date, nick: q.nick, url: q.url,
         tags: q.tags.map(t => ({ name: t })),
-        speakLabel: st.speakingId === q.id ? '■ 멈춤' : '▶ 무명의 목소리',
-        speak: () => this.speak(q),
         saveLabel: s.saved.includes(q.id) ? '저장됨' : '저장',
         saveCol: s.saved.includes(q.id) ? '#c96f3b' : '#a89e8e',
         save: () => this.mut(ss => { ss.saved = ss.saved.includes(q.id) ? ss.saved.filter(x => x !== q.id) : [...ss.saved, q.id]; }),
@@ -1023,7 +1031,7 @@ class Component extends DCLogic {
       failClose: () => this.setState({ fail: null }),
       powerVal: s.power, convVal: s.conv, longestVal: s.longest,
       sheetOn: st.sheet,
-      closeSettings: () => this.setState({ sheet: false }),
+      closeSettings: () => this.setState({ sheet: false, resetArm: false }),
       stop: e => e.stopPropagation(),
       pinNew: st.pinNew, setPinNew: e => this.setState({ pinNew: e.target.value.replace(/\D/g, '').slice(0, 4) }),
       pinPlaceholder: (s.pinHash || s.pin) ? '설정됨 — 변경하려면 입력' : '미설정',
@@ -1037,9 +1045,13 @@ class Component extends DCLogic {
       },
       clearPin: () => { this.mut(ss => { ss.pinHash = ''; ss.pin = ''; }); this.showToast('PIN이 해제되었다'); },
       notifText: s.notifText, setNotifText: e => { const v = e.target.value; this.mut(ss => { ss.notifText = v; }); },
-      resetAll: () => {
+      resetIdle: !st.resetArm,
+      resetArmed: !!st.resetArm,
+      resetArm: () => this.setState({ resetArm: true }),
+      resetCancel: () => this.setState({ resetArm: false }),
+      resetConfirm: () => {
         this.mut(ss => Object.assign(ss, this.def()));
-        this.setState({ sheet: false, obStep: 1, screen: 'home' });
+        this.setState({ sheet: false, obStep: 1, screen: 'home', resetArm: false });
         this.showToast('모든 기록이 초기화되었다');
       },
       exportData: () => this.exportNow(),
