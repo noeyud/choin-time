@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>초인타임</title>
+<meta name="description" content="충동을 힘으로 바꾸는 자기통제 훈련">
+<meta name="theme-color" content="#0b0a09">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="초인타임">
+<script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));</script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+html,body{margin:0;padding:0;background:#0b0a09;}
+body{font-family:'Pretendard Variable',Pretendard,-apple-system,'Apple SD Gothic Neo',sans-serif;color:#eae2d3;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+a{color:#c9865b;text-decoration:none;} a:hover{color:#e09a68;}
+button{font-family:inherit;cursor:pointer;}
+input,textarea{font-family:inherit;outline:none;}
+::-webkit-scrollbar{width:0;height:0;}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+@keyframes aura{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.07)}}
+@keyframes emberBtn{0%,100%{box-shadow:0 0 16px rgba(201,111,59,.22),inset 0 0 14px rgba(0,0,0,.45)}50%{box-shadow:0 0 34px rgba(201,111,59,.5),inset 0 0 14px rgba(0,0,0,.45)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes drift{0%,100%{border-radius:47% 53% 56% 44%/58% 60% 40% 42%}50%{border-radius:53% 47% 44% 56%/46% 42% 58% 54%}}
+@keyframes breathRing{0%{transform:scale(.72);opacity:.95}50%{transform:scale(1.18);opacity:.35}100%{transform:scale(.72);opacity:.95}}
+@keyframes eyeOpen{from{height:2px;opacity:.5}to{height:11px;opacity:1}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;gap:44px;background:radial-gradient(1100px 700px at 50% 18%, #16130f, #0b0a09);padding:0;">
+<div style="position:relative;width:min(390px,100vw);height:min(844px,100dvh);background:#131110;overflow:hidden;border-radius:26px;box-shadow:0 40px 90px rgba(0,0,0,.65),0 0 0 1px #2a2521;display:flex;flex-direction:column;">
+
+  <!-- ===== PIN LOCK ===== -->
+  <sc-if value="{{ locked }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:90;background:#0d0c0a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;">
+      <div style="font-size:13px;letter-spacing:.3em;color:#6b6357;">超人時間</div>
+      <div style="font-size:20px;font-weight:700;">잠겨 있다</div>
+      <div style="display:flex;gap:14px;">
+        <sc-for list="{{ pinDots }}" as="p" hint-placeholder-count="4">
+          <div style="width:12px;height:12px;border-radius:50%;background:{{ p.bg }};border:1px solid #4a4238;"></div>
+        </sc-for>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,72px);gap:12px;margin-top:8px;">
+        <sc-for list="{{ pinKeys }}" as="k" hint-placeholder-count="12">
+          <button onClick="{{ k.press }}" style="height:56px;border-radius:16px;background:#1c1917;border:1px solid #2a2521;color:#eae2d3;font-size:20px;font-weight:600;">{{ k.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===== ONBOARDING ===== -->
+  <sc-if value="{{ showOb }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;padding:28px 24px calc(24px + env(safe-area-inset-bottom));overflow-y:auto;">
+      <div style="display:flex;gap:6px;margin-bottom:34px;">
+        <sc-for list="{{ obDots }}" as="d" hint-placeholder-count="5">
+          <div style="flex:1;height:2px;background:{{ d.bg }};"></div>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ ob1 }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1;display:flex;flex-direction:column;animation:fadeUp .5s ease both;">
+          <div style="display:flex;justify-content:center;margin:12px 0 26px;">
+            <div style="position:relative;width:120px;height:120px;">
+              <div style="position:absolute;inset:-16px;border-radius:50%;background:radial-gradient(circle,rgba(201,111,59,.16),transparent 70%);animation:aura 5s ease-in-out infinite;"></div>
+              <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 32%, #262119, #0a0908 72%);border-radius:47% 53% 56% 44%/58% 60% 40% 42%;animation:drift 9s ease-in-out infinite;"></div>
+              <div style="position:absolute;left:36px;top:50px;width:16px;height:2px;border-radius:2px;background:#c96f3b;box-shadow:0 0 8px rgba(201,111,59,.9);"></div>
+              <div style="position:absolute;right:36px;top:50px;width:16px;height:2px;border-radius:2px;background:#c96f3b;box-shadow:0 0 8px rgba(201,111,59,.9);"></div>
+            </div>
+          </div>
+          <div style="text-align:center;font-size:12px;letter-spacing:.35em;color:#6b6357;margin-bottom:10px;">超人時間</div>
+          <h1 style="margin:0 0 18px;text-align:center;font-size:30px;font-weight:800;letter-spacing:-.02em;">초인타임</h1>
+          <p style="margin:0 0 24px;text-align:center;color:#a89e8e;font-size:15px;line-height:1.7;text-wrap:pretty;">금욕이 목적이 아니다.<br>충동의 에너지를 <b style="color:#eae2d3;">네가 정한 방향</b>으로 옮기는 훈련이다.<br>무명(無名)이 그 훈련을 지켜본다.</p>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:auto;">
+            <div style="border-left:2px solid #c96f3b;padding:10px 14px;background:#1c1917;font-size:14px;color:#cfc6b6;">“충동은 사라지지 않는다. 방향만 바뀐다.”</div>
+            <div style="border-left:2px solid #3a332c;padding:10px 14px;background:#1c1917;font-size:14px;color:#cfc6b6;">“욕구는 명령이 아니다.”</div>
+            <div style="border-left:2px solid #3a332c;padding:10px 14px;background:#1c1917;font-size:14px;color:#cfc6b6;">“참지 마라. 다른 곳에 사용해라.”</div>
+          </div>
+          <button onClick="{{ obNext }}" style="margin-top:26px;height:54px;border-radius:14px;background:#c96f3b;border:none;color:#16110d;font-size:16px;font-weight:800;">시작한다</button>
+          <button onClick="{{ seedDemo }}" style="margin-top:12px;background:none;border:none;color:#6b6357;font-size:13px;text-decoration:underline;">14일차 데모 기록으로 둘러보기</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ ob2 }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;animation:fadeUp .4s ease both;">
+          <h2 style="margin:0 0 6px;font-size:24px;font-weight:800;">판정 기준</h2>
+          <p style="margin:0 0 22px;color:#a89e8e;font-size:14px;">기준이 흐리면 훈련도 흐려진다. 지금 확인해라.</p>
+          <div style="font-size:12px;font-weight:700;letter-spacing:.12em;color:#c96f3b;margin-bottom:8px;">기록이 끊기는 경우</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:22px;">
+            <div style="background:#1c1917;border:1px solid #3a2a20;border-radius:12px;padding:13px 14px;font-size:14px;">야한 콘텐츠를 의도적으로 검색·탐색·저장·반복 시청</div>
+            <div style="background:#1c1917;border:1px solid #3a2a20;border-radius:12px;padding:13px 14px;font-size:14px;">자위</div>
+          </div>
+          <div style="font-size:12px;font-weight:700;letter-spacing:.12em;color:#7d8a6a;margin-bottom:8px;">실패가 아닌 경우</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="background:#17151312;border:1px solid #2a2521;border-radius:12px;padding:13px 14px;font-size:14px;color:#a89e8e;">우연히 노출된 콘텐츠를 바로 넘긴 경우</div>
+            <div style="border:1px solid #2a2521;border-radius:12px;padding:13px 14px;font-size:14px;color:#a89e8e;">몽정</div>
+            <div style="border:1px solid #2a2521;border-radius:12px;padding:13px 14px;font-size:14px;color:#a89e8e;">연인과의 성관계</div>
+          </div>
+          <p style="margin:18px 0 auto;color:#6b6357;font-size:12.5px;line-height:1.6;">콘텐츠 탐색과 자위는 별도 사건으로 기록되지만, 같은 무결일 기록에 영향을 준다.</p>
+          <button onClick="{{ obNext }}" style="margin-top:26px;height:54px;border-radius:14px;background:#c96f3b;border:none;color:#16110d;font-size:16px;font-weight:800;">확인했다</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ ob3 }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;animation:fadeUp .4s ease both;">
+          <h2 style="margin:0 0 6px;font-size:24px;font-weight:800;">에너지를 어디에 쓸 건가</h2>
+          <p style="margin:0 0 24px;color:#a89e8e;font-size:14px;">충동이 올 때 대신 수행할 분야를 골라라. 여러 개도 좋다.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <sc-for list="{{ obFieldChips }}" as="f" hint-placeholder-count="5">
+              <button onClick="{{ f.toggle }}" style="padding:14px 20px;border-radius:14px;font-size:15px;font-weight:600;background:{{ f.bg }};border:1px solid {{ f.bd }};color:{{ f.col }};min-height:48px;">{{ f.name }}</button>
+            </sc-for>
+          </div>
+          <button onClick="{{ obNext3 }}" style="margin-top:auto;height:54px;border-radius:14px;background:#c96f3b;border:none;color:#16110d;font-size:16px;font-weight:800;">다음</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ ob4 }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;animation:fadeUp .4s ease both;">
+          <h2 style="margin:0 0 6px;font-size:24px;font-weight:800;">훈련 조건</h2>
+          <p style="margin:0 0 22px;color:#a89e8e;font-size:14px;">시작은 오늘이다. 위험한 시간대를 알고 있어라.</p>
+          <div style="font-size:13px;color:#a89e8e;margin-bottom:8px;">위험 시간대</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;">
+            <sc-for list="{{ obRiskChips }}" as="r" hint-placeholder-count="4">
+              <button onClick="{{ r.toggle }}" style="padding:11px 16px;border-radius:12px;font-size:14px;background:{{ r.bg }};border:1px solid {{ r.bd }};color:{{ r.col }};min-height:44px;">{{ r.name }}</button>
+            </sc-for>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;background:#1c1917;border:1px solid #2a2521;border-radius:14px;padding:14px 16px;margin-bottom:22px;">
+            <div>
+              <div style="font-size:14.5px;font-weight:600;">위험 시간대 알림</div>
+              <div style="font-size:12px;color:#6b6357;margin-top:3px;">민감한 단어 없이 “{{ obNotifText }}”로만 표시된다</div>
+            </div>
+            <button onClick="{{ obToggleNotif }}" style="width:52px;height:30px;border-radius:15px;border:none;background:{{ obNotifBg }};position:relative;flex-shrink:0;">
+              <div style="position:absolute;top:3px;left:{{ obNotifKnob }};width:24px;height:24px;border-radius:50%;background:#eae2d3;transition:left .2s;"></div>
+            </button>
+          </div>
+          <div style="font-size:13px;color:#a89e8e;margin-bottom:8px;">나만 아는 시작 이유</div>
+          <textarea value="{{ obReason }}" onChange="{{ setObReason }}" placeholder="흔들리는 날, 무명이 이 문장을 너에게 보여준다." style="background:#1c1917;border:1px solid #2a2521;border-radius:14px;color:#eae2d3;padding:14px;font-size:14px;min-height:96px;resize:none;line-height:1.6;"></textarea>
+          <button onClick="{{ obNext }}" style="margin-top:auto;height:54px;border-radius:14px;background:#c96f3b;border:none;color:#16110d;font-size:16px;font-weight:800;">마지막 단계</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ ob5 }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;animation:fadeUp .4s ease both;">
+          <div style="font-size:12px;letter-spacing:.3em;color:#6b6357;margin-bottom:18px;">서약</div>
+          <p style="margin:0 0 12px;font-size:23px;font-weight:800;line-height:1.55;text-wrap:pretty;">“나는 충동에 반응하지 않고<br>방향을 선택한다.”</p>
+          <p style="margin:0 0 44px;color:#6b6357;font-size:13px;">아래를 길게 눌러 서약해라.</p>
+          <button onMouseDown="{{ pledgeStart }}" onMouseUp="{{ pledgeEnd }}" onMouseLeave="{{ pledgeEnd }}" onTouchStart="{{ pledgeStart }}" onTouchEnd="{{ pledgeEnd }}" style="position:relative;height:64px;border-radius:16px;border:1px solid #4a3527;background:#1c1815;color:#eae2d3;font-size:16px;font-weight:800;overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:none;">
+            <div style="position:absolute;inset:0;width:{{ pledgeW }};background:linear-gradient(90deg,#8a3d24,#c96f3b);transition:width .05s linear;"></div>
+            <span style="position:relative;">{{ pledgeLabel }}</span>
+          </button>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ===== MAIN APP ===== -->
+  <sc-if value="{{ showApp }}" hint-placeholder-val="{{ true }}">
+    <div style="flex:1;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;">
+
+      <!-- ---- 오늘 (HOME) ---- -->
+      <sc-if value="{{ navHome }}" hint-placeholder-val="{{ true }}">
+        <div data-screen-label="오늘 홈" style="padding:20px 20px 28px;display:flex;flex-direction:column;animation:fadeUp .4s ease both;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-size:11px;letter-spacing:.32em;color:#6b6357;">超人時間</div>
+            <button onClick="{{ openSettings }}" aria-label="설정" style="background:none;border:none;color:#6b6357;font-size:22px;line-height:1;padding:6px;">⋯</button>
+          </div>
+          <div style="text-align:center;margin-top:14px;">
+            <div style="font-size:56px;font-weight:900;letter-spacing:-.03em;line-height:1;">{{ dayLabel }}</div>
+            <div style="margin-top:10px;display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#a89e8e;">
+              <span style="color:#c96f3b;font-weight:700;">{{ rankName }}</span>
+              <span style="color:#4a4238;">·</span>
+              <span>{{ nextGateLabel }}</span>
+            </div>
+          </div>
+          <sc-if value="{{ isReturn }}" hint-placeholder-val="{{ false }}">
+            <div style="align-self:center;margin-top:10px;font-size:12px;color:#7d8a6a;border:1px solid #333a2c;border-radius:20px;padding:5px 12px;">즉시 복귀 — 연패는 없다</div>
+          </sc-if>
+          <div style="display:flex;justify-content:center;margin:26px 0 6px;">
+            <div style="position:relative;width:172px;height:172px;animation:breathe 6s ease-in-out infinite;">
+              <div style="position:absolute;inset:-30px;border-radius:50%;background:radial-gradient(circle,rgba(201,111,59,.2),transparent 68%);opacity:{{ auraOp }};animation:aura 6s ease-in-out infinite;"></div>
+              <div style="position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(201,111,59,.22);opacity:{{ auraOp }};"></div>
+              <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 30%, #282218, #090807 74%);border-radius:47% 53% 56% 44%/58% 60% 40% 42%;animation:drift 10s ease-in-out infinite;box-shadow:0 24px 40px rgba(0,0,0,.5);"></div>
+              <div style="position:absolute;left:52px;top:72px;width:22px;height:2.5px;border-radius:3px;background:#c96f3b;box-shadow:0 0 10px rgba(201,111,59,.8);"></div>
+              <div style="position:absolute;right:52px;top:72px;width:22px;height:2.5px;border-radius:3px;background:#c96f3b;box-shadow:0 0 10px rgba(201,111,59,.8);"></div>
+              <div style="position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);width:120px;height:14px;border-radius:50%;background:rgba(0,0,0,.55);filter:blur(6px);"></div>
+            </div>
+          </div>
+          <p style="margin:16px auto 0;max-width:300px;text-align:center;font-size:16px;line-height:1.65;color:#cfc6b6;text-wrap:pretty;">“{{ dailyLine }}”<span style="display:block;margin-top:6px;font-size:12px;color:#6b6357;">— 무명</span></p>
+
+          <sc-if value="{{ hasCheck }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:22px;background:#1c1917;border:1px solid #4a3527;border-radius:16px;padding:16px;">
+              <div style="font-size:14.5px;font-weight:700;">10분이 지났다. 욕구는 어떤가.</div>
+              <div style="display:flex;gap:10px;margin-top:12px;">
+                <button onClick="{{ checkGone }}" style="flex:1;height:46px;border-radius:12px;background:#c96f3b;border:none;color:#16110d;font-weight:700;font-size:14px;">가라앉았다</button>
+                <button onClick="{{ checkStill }}" style="flex:1;height:46px;border-radius:12px;background:none;border:1px solid #3a332c;color:#a89e8e;font-size:14px;">아직 남아 있다</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:24px;">
+            <sc-for list="{{ statCards }}" as="st" hint-placeholder-count="4">
+              <div style="background:#1c1917;border:1px solid #2a2521;border-radius:14px;padding:12px 6px;text-align:center;">
+                <div style="font-size:19px;font-weight:800;color:{{ st.col }};">{{ st.val }}</div>
+                <div style="font-size:11px;color:#6b6357;margin-top:4px;">{{ st.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="margin-top:14px;background:#1c1917;border:1px solid #2a2521;border-radius:16px;padding:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="font-size:11.5px;letter-spacing:.14em;color:#6b6357;font-weight:700;">오늘의 자기계발 임무 · {{ missionField }}</div>
+              <sc-if value="{{ missionDone }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;color:#7d8a6a;font-weight:700;">완료 +20</div></sc-if>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;">
+              <div style="font-size:16px;font-weight:600;color:{{ missionCol }};">{{ missionText }}</div>
+              <sc-if value="{{ missionOpen }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ doMission }}" style="flex-shrink:0;padding:10px 16px;border-radius:12px;background:none;border:1px solid #c96f3b;color:#c96f3b;font-weight:700;font-size:13px;min-height:44px;">완료</button>
+              </sc-if>
+            </div>
+          </div>
+
+          <button onClick="{{ startBattle }}" style="margin-top:22px;height:66px;border-radius:18px;border:1px solid #5c2c18;background:linear-gradient(180deg,#2a1710,#1d100a);color:#e8956a;font-size:18px;font-weight:900;letter-spacing:.02em;animation:emberBtn 3.2s ease-in-out infinite;">지금 위험하다</button>
+          <button onClick="{{ openFail }}" style="margin-top:16px;background:none;border:none;color:#5c554a;font-size:13px;text-decoration:underline;align-self:center;padding:8px;">실패를 기록한다</button>
+        </div>
+      </sc-if>
+
+      <!-- ---- 수련 ---- -->
+      <sc-if value="{{ navTrain }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="수련" style="padding:24px 20px 28px;display:flex;flex-direction:column;gap:22px;animation:fadeUp .4s ease both;">
+          <div>
+            <h2 style="margin:0;font-size:24px;font-weight:800;">수련</h2>
+            <p style="margin:6px 0 0;color:#a89e8e;font-size:13.5px;">욕구가 없어도 수행한다. 그래야 위기 때 몸이 먼저 움직인다.</p>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <sc-for list="{{ trainRows }}" as="t" hint-placeholder-count="6">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:#1c1917;border:1px solid #2a2521;border-radius:14px;padding:13px 14px;">
+                <div>
+                  <div style="font-size:11px;color:#6b6357;letter-spacing:.1em;">{{ t.field }}</div>
+                  <div style="font-size:15px;font-weight:600;margin-top:3px;">{{ t.label }}</div>
+                </div>
+                <button onClick="{{ t.run }}" style="flex-shrink:0;padding:10px 14px;border-radius:11px;background:none;border:1px solid #3a332c;color:#c9865b;font-weight:700;font-size:13px;min-height:44px;">+15 수행</button>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background:#1c1917;border:1px solid #2a2521;border-radius:16px;padding:16px;">
+            <div style="font-size:12px;letter-spacing:.14em;color:#6b6357;font-weight:700;margin-bottom:12px;">생존자 통계</div>
+            <div style="font-size:14.5px;line-height:1.7;color:#a89e8e;">표본이 쌓이는 중이다. 초인타임 사용자 데이터가 충분해지면 이곳에 실제 생존자 수가 표시된다.</div>
+            <div style="margin-top:14px;border:1px dashed #3a332c;border-radius:12px;padding:14px;opacity:.55;">
+              <div style="font-size:10.5px;letter-spacing:.14em;color:#6b6357;margin-bottom:8px;">표시 예시 — 실제 데이터 아님</div>
+              <div style="font-size:15px;line-height:1.75;color:#cfc6b6;">이번 달 수련을 시작한 1,284명 중 14일째 남아 있는 사람은 <b style="color:#c96f3b;font-size:19px;">마흔일곱 명</b>입니다.</div>
+            </div>
+          </div>
+          <div style="background:#1c1917;border:1px solid #2a2521;border-radius:16px;padding:16px;">
+            <div style="font-size:12px;letter-spacing:.14em;color:#6b6357;font-weight:700;margin-bottom:12px;">이 훈련이 주는 것</div>
+            <div style="display:flex;flex-direction:column;gap:9px;font-size:14px;color:#cfc6b6;line-height:1.5;">
+              <div>· 포르노와 충동에 쓰던 시간의 회수</div>
+              <div>· 자기통제감과 자신감</div>
+              <div>· 집중을 방해하는 습관의 감소</div>
+              <div>· 운동·공부·업무로의 행동 전환</div>
+              <div>· 자신과 한 약속을 지켰다는 성취감</div>
+            </div>
+            <p style="margin:14px 0 0;font-size:12.5px;color:#6b6357;line-height:1.65;">‘초인화’는 초능력이 아니다. 자신의 행동을 스스로 선택할 수 있게 되는 과정을 뜻한다. 의학적 치료가 아니며, 힘들면 전문가의 도움을 받아라.</p>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ---- 계시 ---- -->
+      <sc-if value="{{ navQuotes }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="오늘의 계시" style="padding:24px 20px 28px;display:flex;flex-direction:column;gap:16px;animation:fadeUp .4s ease both;">
+          <div>
+            <h2 style="margin:0;font-size:24px;font-weight:800;">오늘의 계시</h2>
+            <p style="margin:6px 0 0;color:#a89e8e;font-size:13px;">현자타임 갤러리 ‘초월자’ 탭 개념글에서 하루 1–2회 자동 수집</p>
+          </div>
+          <div style="border:1px solid #3a332c;border-radius:10px;padding:9px 12px;font-size:12px;color:#6b6357;">프로토타입 예시 데이터 — 실제 수집된 글이 아니다</div>
+          <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;">
+            <sc-for list="{{ tagChips }}" as="tg" hint-placeholder-count="5">
+              <button onClick="{{ tg.pick }}" style="flex-shrink:0;padding:8px 14px;border-radius:20px;font-size:13px;background:{{ tg.bg }};border:1px solid {{ tg.bd }};color:{{ tg.col }};min-height:36px;">{{ tg.name }}</button>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <sc-for list="{{ quoteCards }}" as="q" hint-placeholder-count="4">
+              <div style="background:#1c1917;border:1px solid #2a2521;border-radius:16px;padding:18px 16px;">
+                <p style="margin:0;font-size:16.5px;font-weight:600;line-height:1.65;text-wrap:pretty;">“{{ q.text }}”</p>
+                <div style="margin-top:12px;font-size:12px;color:#6b6357;line-height:1.6;">{{ q.title }} · {{ q.date }} · {{ q.nick }}</div>
+                <div style="display:flex;gap:6px;margin-top:8px;">
+                  <sc-for list="{{ q.tags }}" as="qt" hint-placeholder-count="2">
+                    <span style="font-size:11px;color:#c9865b;border:1px solid #3a2f26;border-radius:12px;padding:3px 9px;">{{ qt.name }}</span>
+                  </sc-for>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:14px;border-top:1px solid #2a2521;padding-top:12px;">
+                  <button onClick="{{ q.speak }}" style="padding:9px 14px;border-radius:11px;background:#26201b;border:1px solid #3a2f26;color:#e8956a;font-size:12.5px;font-weight:700;min-height:40px;">{{ q.speakLabel }}</button>
+                  <button onClick="{{ q.save }}" style="padding:9px 13px;border-radius:11px;background:none;border:1px solid #3a332c;color:{{ q.saveCol }};font-size:12.5px;min-height:40px;">{{ q.saveLabel }}</button>
+                  <button onClick="{{ q.share }}" style="padding:9px 13px;border-radius:11px;background:none;border:1px solid #3a332c;color:#a89e8e;font-size:12.5px;min-height:40px;">공유</button>
+                  <a href="{{ q.url }}" target="_blank" rel="noreferrer" style="margin-left:auto;font-size:12px;color:#6b6357;text-decoration:underline;">원문</a>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ---- 여정 ---- -->
+      <sc-if value="{{ navJourney }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="여정" style="padding:24px 20px 28px;display:flex;flex-direction:column;gap:22px;animation:fadeUp .4s ease both;">
+          <div>
+            <h2 style="margin:0;font-size:24px;font-weight:800;">여정</h2>
+            <p style="margin:6px 0 0;color:#a89e8e;font-size:13.5px;">{{ journeySub }}</p>
+          </div>
+          <div style="display:flex;flex-direction:column;">
+            <sc-for list="{{ gateRows }}" as="g" hint-placeholder-count="9">
+              <div style="display:flex;gap:16px;">
+                <div style="display:flex;flex-direction:column;align-items:center;width:22px;">
+                  <div style="width:16px;height:16px;border-radius:50%;background:{{ g.dotBg }};border:2px solid {{ g.dotBd }};box-shadow:{{ g.dotGlow }};flex-shrink:0;"></div>
+                  <sc-if value="{{ g.line }}" hint-placeholder-val="{{ true }}"><div style="width:2px;flex:1;background:{{ g.lineBg }};min-height:34px;"></div></sc-if>
+                </div>
+                <div style="padding-bottom:22px;flex:1;">
+                  <div style="display:flex;align-items:baseline;gap:8px;">
+                    <div style="font-size:16px;font-weight:800;color:{{ g.titleCol }};">{{ g.day }}일 — {{ g.rank }}</div>
+                    <sc-if value="{{ g.current }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;color:#c96f3b;border:1px solid #4a3527;border-radius:10px;padding:2px 8px;">다음 관문</span></sc-if>
+                  </div>
+                  <div style="font-size:13px;color:{{ g.quoteCol }};margin-top:4px;line-height:1.55;">{{ g.quote }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background:#1c1917;border:1px solid #2a2521;border-radius:16px;padding:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+              <div style="font-size:14.5px;font-weight:700;">{{ calTitle }}</div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:11px;color:#6b6357;margin-bottom:6px;">
+              <div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">
+              <sc-for list="{{ calCells }}" as="c" hint-placeholder-count="35">
+                <div style="height:40px;border-radius:9px;background:{{ c.bg }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
+                  <div style="font-size:11px;color:{{ c.numCol }};">{{ c.n }}</div>
+                  <div style="font-size:11px;line-height:1;color:{{ c.symCol }};">{{ c.sym }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;font-size:11.5px;color:#6b6357;">
+              <span><span style="color:#cfc6b6;">●</span> 무결일</span>
+              <span><span style="color:#c96f3b;">◆</span> 전환 수행</span>
+              <span><span style="color:#7d8a6a;">○</span> 위기 극복</span>
+              <span><span style="color:#b0523a;">✕</span> 실패</span>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+
+    <!-- bottom nav -->
+    <div style="flex-shrink:0;display:flex;border-top:1px solid #241f1b;background:#141210;padding-bottom:env(safe-area-inset-bottom);">
+      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="4">
+        <button onClick="{{ n.go }}" style="flex:1;height:62px;background:none;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;">
+          <div style="width:5px;height:5px;border-radius:50%;background:{{ n.dot }};"></div>
+          <div style="font-size:12.5px;font-weight:{{ n.wt }};color:{{ n.col }};letter-spacing:.06em;">{{ n.label }}</div>
+        </button>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <!-- ===== BATTLE MODE ===== -->
+  <sc-if value="{{ battleOn }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="전투모드" style="position:absolute;inset:0;z-index:60;background:radial-gradient(500px 400px at 50% 30%, #1a120c, #0a0807);display:flex;flex-direction:column;padding:24px 24px calc(28px + env(safe-area-inset-bottom));">
+      <button onClick="{{ battleExit }}" aria-label="닫기" style="align-self:flex-end;background:none;border:none;color:#5c554a;font-size:24px;padding:8px;line-height:1;">×</button>
+
+      <sc-if value="{{ bAwaken }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;animation:fadeUp .4s ease both;">
+          <div style="position:relative;width:150px;height:150px;">
+            <div style="position:absolute;inset:-26px;border-radius:50%;background:radial-gradient(circle,rgba(201,111,59,.32),transparent 68%);animation:aura 2.4s ease-in-out infinite;"></div>
+            <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 30%, #2c2216, #090807 74%);border-radius:47% 53% 56% 44%/58% 60% 40% 42%;"></div>
+            <div style="position:absolute;left:44px;top:60px;width:20px;border-radius:6px;background:#e8956a;box-shadow:0 0 16px rgba(232,149,106,1);animation:eyeOpen .5s ease-out both;"></div>
+            <div style="position:absolute;right:44px;top:60px;width:20px;border-radius:6px;background:#e8956a;box-shadow:0 0 16px rgba(232,149,106,1);animation:eyeOpen .5s ease-out both;"></div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:13px;color:#6b6357;margin-bottom:10px;">무명이 눈을 떴다</div>
+            <div style="font-size:26px;font-weight:900;line-height:1.4;">“지금 {{ bTotal }}초만<br>지배해라.”</div>
+          </div>
+          <button onClick="{{ battleBegin }}" style="width:100%;height:58px;border-radius:16px;background:#c96f3b;border:none;color:#16110d;font-size:17px;font-weight:800;">호흡 시작</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ bFocus }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
+          <div style="position:relative;width:230px;height:230px;display:flex;align-items:center;justify-content:center;">
+            <div style="position:absolute;inset:0;border-radius:50%;border:2px solid rgba(201,111,59,.5);animation:breathRing 8s ease-in-out infinite;"></div>
+            <div style="position:absolute;inset:26px;border-radius:50%;border:1px solid rgba(201,111,59,.25);animation:breathRing 8s ease-in-out infinite reverse;"></div>
+            <div style="text-align:center;">
+              <div style="font-size:60px;font-weight:900;font-variant-numeric:tabular-nums;">{{ bTime }}</div>
+              <div style="font-size:16px;color:#c9865b;font-weight:700;margin-top:2px;">{{ breathText }}</div>
+            </div>
+          </div>
+          <p style="margin:24px 0 0;text-align:center;color:#a89e8e;font-size:14px;line-height:1.7;">파도는 반드시 낮아진다.<br>세지 말고, 지나가는 것을 봐라.</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ bMove }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;animation:fadeUp .4s ease both;text-align:center;">
+          <div style="font-size:13px;letter-spacing:.2em;color:#6b6357;">몸을 먼저 움직여라</div>
+          <div style="font-size:24px;font-weight:900;line-height:1.5;">휴대폰을 뒤집어라.<br>자리에서 일어나라.</div>
+          <p style="margin:0;color:#a89e8e;font-size:14px;">자세가 바뀌면 충동의 회로가 끊긴다.</p>
+          <button onClick="{{ battleToAction }}" style="width:100%;height:58px;border-radius:16px;background:#c96f3b;border:none;color:#16110d;font-size:17px;font-weight:800;">했다</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ bAction }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;animation:fadeUp .4s ease both;">
+          <div style="text-align:center;margin-bottom:14px;">
+            <div style="font-size:13px;letter-spacing:.2em;color:#6b6357;margin-bottom:8px;">이제 방향을 바꿔라</div>
+            <div style="font-size:22px;font-weight:900;">지금 바로 하나를 수행한다</div>
+          </div>
+          <sc-for list="{{ bActions }}" as="a" hint-placeholder-count="3">
+            <button onClick="{{ a.pick }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:#1c1917;border:1px solid #3a2f26;border-radius:16px;padding:17px 16px;color:#eae2d3;font-size:16px;font-weight:600;text-align:left;min-height:56px;">
+              <span>{{ a.label }}</span><span style="color:#c96f3b;font-weight:800;font-size:13px;flex-shrink:0;">+30</span>
+            </button>
+          </sc-for>
+          <button onClick="{{ battleExit }}" style="margin-top:10px;background:none;border:none;color:#5c554a;font-size:13px;text-decoration:underline;">지금은 할 수 없다</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ bDone }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;animation:fadeUp .4s ease both;text-align:center;">
+          <div style="font-size:46px;font-weight:900;color:#c96f3b;">+30</div>
+          <div style="font-size:14px;letter-spacing:.2em;color:#6b6357;">초인력 획득</div>
+          <div style="font-size:21px;font-weight:800;line-height:1.6;">“충동은 사라지지 않았다.<br>방향이 바뀌었을 뿐이다.”</div>
+          <p style="margin:0;color:#a89e8e;font-size:13.5px;">10분 뒤, 욕구가 가라앉았는지 홈에서 확인한다.</p>
+          <button onClick="{{ battleExit }}" style="width:100%;height:58px;border-radius:16px;background:#c96f3b;border:none;color:#16110d;font-size:17px;font-weight:800;">돌아간다</button>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ===== FAILURE FLOW ===== -->
+  <sc-if value="{{ failOn }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="실패 기록" style="position:absolute;inset:0;z-index:60;background:#0d0c0a;display:flex;flex-direction:column;padding:24px 24px calc(28px + env(safe-area-inset-bottom));">
+      <button onClick="{{ failClose }}" aria-label="닫기" style="align-self:flex-end;background:none;border:none;color:#5c554a;font-size:24px;padding:8px;line-height:1;">×</button>
+
+      <sc-if value="{{ f1 }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;animation:fadeUp .4s ease both;">
+          <h2 style="margin:0 0 4px;font-size:22px;font-weight:800;">무엇이 있었나</h2>
+          <p style="margin:0 0 14px;color:#a89e8e;font-size:14px;">정확한 기록이 다음 훈련을 만든다. 수치심은 필요 없다.</p>
+          <sc-for list="{{ failTypes }}" as="ft" hint-placeholder-count="3">
+            <button onClick="{{ ft.pick }}" style="background:#1c1917;border:1px solid #2a2521;border-radius:14px;padding:16px;color:#eae2d3;font-size:15.5px;font-weight:600;text-align:left;min-height:52px;">{{ ft.label }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ f2 }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px;animation:fadeUp .4s ease both;">
+          <h2 style="margin:0 0 4px;font-size:22px;font-weight:800;">무엇이 방아쇠였나</h2>
+          <p style="margin:0 0 10px;color:#a89e8e;font-size:14px;">모두 골라라. 같은 함정에 두 번 빠지지 않기 위해서다.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:9px;">
+            <sc-for list="{{ causeChips }}" as="cc" hint-placeholder-count="7">
+              <button onClick="{{ cc.toggle }}" style="padding:12px 16px;border-radius:12px;font-size:14px;background:{{ cc.bg }};border:1px solid {{ cc.bd }};color:{{ cc.col }};min-height:44px;">{{ cc.name }}</button>
+            </sc-for>
+          </div>
+          <button onClick="{{ failRecord }}" style="margin-top:18px;height:54px;border-radius:14px;background:#c96f3b;border:none;color:#16110d;font-size:16px;font-weight:800;">기록한다</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ f3 }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px;animation:fadeUp .4s ease both;text-align:center;">
+          <div style="font-size:22px;font-weight:900;line-height:1.6;">“기록은 끊겼다.<br>훈련은 남았다.”</div>
+          <p style="margin:0;color:#a89e8e;font-size:14px;line-height:1.75;">연속 무결일은 1일부터 다시 센다.<br>누적 초인력 {{ powerVal }} · 전환 {{ convVal }}회 · 최장 {{ longestVal }}일은 그대로다.</p>
+          <div style="border:1px solid #333a2c;border-radius:14px;padding:14px;font-size:13.5px;color:#7d8a6a;line-height:1.6;">24시간 안에 다시 앉으면 ‘즉시 복귀’가 된다.<br>한 번의 패배를 연패로 만들지 마라.</div>
+          <button onClick="{{ failRestart }}" style="height:58px;border-radius:16px;background:#c96f3b;border:none;color:#16110d;font-size:17px;font-weight:800;">다시 앉는다</button>
+          <button onClick="{{ failClose }}" style="background:none;border:none;color:#5c554a;font-size:13px;text-decoration:underline;">잠시 후에</button>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ===== SETTINGS SHEET ===== -->
+  <sc-if value="{{ sheetOn }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:70;background:rgba(6,5,4,.7);display:flex;flex-direction:column;justify-content:flex-end;" onClick="{{ closeSettings }}">
+      <div style="background:#1a1815;border-radius:22px 22px 0 0;padding:22px 20px calc(26px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:18px;" onClick="{{ stop }}">
+        <div style="width:40px;height:4px;border-radius:2px;background:#3a332c;align-self:center;"></div>
+        <div style="font-size:17px;font-weight:800;">설정</div>
+        <div>
+          <div style="font-size:13px;color:#a89e8e;margin-bottom:8px;">PIN 잠금 (4자리)</div>
+          <div style="display:flex;gap:8px;">
+            <input value="{{ pinNew }}" onChange="{{ setPinNew }}" inputMode="numeric" maxLength="4" placeholder="{{ pinPlaceholder }}" style="flex:1;background:#131110;border:1px solid #2a2521;border-radius:12px;color:#eae2d3;padding:12px 14px;font-size:15px;letter-spacing:.3em;">
+            <button onClick="{{ savePin }}" style="padding:0 18px;border-radius:12px;background:#c96f3b;border:none;color:#16110d;font-weight:700;font-size:14px;">저장</button>
+            <sc-if value="{{ hasPin }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ clearPin }}" style="padding:0 14px;border-radius:12px;background:none;border:1px solid #3a332c;color:#a89e8e;font-size:13px;">해제</button>
+            </sc-if>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:13px;color:#a89e8e;margin-bottom:8px;">알림 표시 문구 — 민감한 단어는 알림에 절대 노출되지 않는다</div>
+          <input value="{{ notifText }}" onChange="{{ setNotifText }}" style="width:100%;background:#131110;border:1px solid #2a2521;border-radius:12px;color:#eae2d3;padding:12px 14px;font-size:15px;">
+        </div>
+        <div style="font-size:12px;color:#6b6357;line-height:1.6;">기록은 이 기기 안에만 저장된다. 서버로 전송되지 않는다.</div>
+        <div style="display:flex;gap:8px;">
+          <button onClick="{{ exportData }}" style="flex:1;height:46px;border-radius:12px;background:#131110;border:1px solid #3a332c;color:#a89e8e;font-size:14px;font-weight:600;">데이터 백업</button>
+          <button onClick="{{ importData }}" style="flex:1;height:46px;border-radius:12px;background:#131110;border:1px solid #3a332c;color:#a89e8e;font-size:14px;font-weight:600;">백업 복원</button>
+        </div>
+        <button onClick="{{ resetAll }}" style="height:46px;border-radius:12px;background:none;border:1px solid #4a2c20;color:#b0523a;font-size:14px;font-weight:600;">모든 기록 초기화</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;left:50%;bottom:92px;transform:translateX(-50%);z-index:95;background:#26201b;border:1px solid #4a3527;color:#eae2d3;font-size:13.5px;font-weight:600;padding:11px 18px;border-radius:22px;white-space:nowrap;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:fadeUp .25s ease both;">{{ toastMsg }}</div>
+  </sc-if>
+</div>
+
+<!-- desktop side panel -->
+<sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ false }}">
+  <div style="width:300px;display:flex;flex-direction:column;gap:16px;">
+    <div style="font-size:11px;letter-spacing:.32em;color:#6b6357;">超人時間 — 수련 지침</div>
+    <div style="background:#161311;border:1px solid #241f1b;border-radius:16px;padding:18px;">
+      <div style="font-size:13px;font-weight:800;color:#c9865b;margin-bottom:10px;">철학</div>
+      <p style="margin:0;font-size:13px;color:#a89e8e;line-height:1.75;">초인타임은 금욕 앱이 아니다. 성욕과 충동의 에너지를 운동·공부·업무·독서·청소로 전환하는 자기통제 훈련이다.</p>
+    </div>
+    <div style="background:#161311;border:1px solid #241f1b;border-radius:16px;padding:18px;">
+      <div style="font-size:13px;font-weight:800;color:#c9865b;margin-bottom:10px;">판정 기준</div>
+      <p style="margin:0;font-size:13px;color:#a89e8e;line-height:1.75;">의도적 탐색과 자위만 기록을 끊는다. 우연한 노출을 넘긴 것, 몽정, 연인과의 관계는 실패가 아니다.</p>
+    </div>
+    <div style="background:#161311;border:1px solid #241f1b;border-radius:16px;padding:18px;">
+      <div style="font-size:13px;font-weight:800;color:#c9865b;margin-bottom:10px;">주의</div>
+      <p style="margin:0;font-size:13px;color:#a89e8e;line-height:1.75;">‘초인화’는 초능력도 의학적 치료도 아니다. 자신의 행동을 스스로 선택하게 되는 과정일 뿐이다.</p>
+    </div>
+  </div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:844},&quot;mascotAura&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;자동&quot;,&quot;최대&quot;],&quot;default&quot;:&quot;자동&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;무명&quot;},&quot;battleSeconds&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:60,&quot;max&quot;:180,&quot;step&quot;:30,&quot;default&quot;:90,&quot;unit&quot;:&quot;초&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;전투모드&quot;}}">
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    this.FIELDS = ['운동', '공부', '업무', '독서', '청소'];
+    this.ACTIONS = {
+      '운동': ['팔굽혀펴기 20개', '스쿼트 30개', '밖에서 5분 걷기'],
+      '공부': ['CBT 문제 5개 풀기', '단어 10개 암기', '강의 노트 1쪽 복습'],
+      '업무': ['밀린 할 일 1개 처리', '받은 메일 5개 정리', '내일 계획 3줄 쓰기'],
+      '독서': ['책 3쪽 읽기', '어제 읽은 문장 1개 필사'],
+      '청소': ['방 정리 3분', '책상 위 비우기', '찬물 세수 후 이불 정리']
+    };
+    this.COMMON = ['찬물 세수', '휴대폰을 다른 방에 두기'];
+    this.LINES = ['욕구는 명령이 아니다.', '참지 마라. 다른 곳에 사용해라.', '충동은 사라지지 않는다. 방향만 바뀐다.', '흔들리는 것은 죄가 아니다. 따라가는 것이 문제다.', '오늘 하루만 지배하면 된다.', '피하는 것이 아니다. 선택하는 것이다.', '지루함을 견디는 자가 방향을 정한다.'];
+    this.RANKS = [[0, '점화자'], [3, '수련자'], [7, '절제자'], [14, '지배자'], [30, '초월자'], [90, '초인']];
+    this.GATES = [
+      { d: 1, r: '점화자', q: '첫 불씨가 붙었다. 꺼뜨리지만 마라.' },
+      { d: 3, r: '수련자', q: '사흘을 넘긴 자는 방법을 알기 시작한다.' },
+      { d: 7, r: '절제자', q: '일주일. 몸이 새 회로를 기억하기 시작한다.' },
+      { d: 14, r: '지배자', q: '충동이 너를 부르지만, 대답은 네가 정한다.' },
+      { d: 30, r: '초월자', q: '한 달. 이제 시간은 네 편이다.' },
+      { d: 60, r: '초월자 Ⅱ', q: '습관은 무너졌고, 훈련만 남았다.' },
+      { d: 90, r: '초인', q: '90일. 충동은 도구가 되었다.' },
+      { d: 180, r: '초인 Ⅱ', q: '반년. 증명은 끝났다. 이제 삶이다.' },
+      { d: 365, r: '초인 Ⅲ', q: '일 년. 무명은 더 이상 필요 없다.' }
+    ];
+    this.QUOTES = [
+      { id: 1, text: '지루함을 견디는 능력이 곧 절제력이다. 심심할 때 손이 어디로 가는지가 네 수준이다.', title: '30일 넘기고 느낀 점', date: '2026.07.11', nick: '무회귀', tags: ['습관', '지루함'], url: 'https://gall.dcinside.com' },
+      { id: 2, text: '충동은 파도다. 90초만 지나면 반드시 낮아진다. 세지 말고 그냥 지나가는 걸 봐라.', title: '위기 넘기는 법 정리해준다', date: '2026.07.10', nick: '파도관찰자', tags: ['충동', '위기'], url: 'https://gall.dcinside.com' },
+      { id: 3, text: '트리거를 이기려 하지 마라. 트리거가 없는 방을 만들어라. 의지력은 환경을 못 이긴다.', title: '환경 세팅이 전부다', date: '2026.07.08', nick: '방장수', tags: ['환경'], url: 'https://gall.dcinside.com' },
+      { id: 4, text: '실패한 날 밤에 계획을 다시 쓰지 마라. 아침에 써라. 밤의 다짐은 대부분 거짓이다.', title: '리셋 후 복귀 루틴', date: '2026.07.06', nick: '아침형절제', tags: ['복귀', '습관'], url: 'https://gall.dcinside.com' },
+      { id: 5, text: '몸이 피곤하면 뇌는 자극을 찾는다. 일찍 자는 것이 최고의 방어다.', title: '수면이 8할이다', date: '2026.07.03', nick: '초월대기자', tags: ['수면', '환경'], url: 'https://gall.dcinside.com' },
+      { id: 6, text: '기록이 아니라 방향이 전부다. 어제보다 오늘 덜 흔들렸으면 이긴 거다.', title: '숫자에 집착하지 마라', date: '2026.06.29', nick: '무명수련생', tags: ['복귀', '충동'], url: 'https://gall.dcinside.com' }
+    ];
+    this.CAUSES = ['술', '심야', '스트레스', '외로움', 'SNS', '침대에서 휴대폰', '기타'];
+    this.state = {
+      w: typeof window !== 'undefined' ? window.innerWidth : 1200,
+      screen: 'home', obStep: 1, obFields: [], obRisk: ['심야'], obNotif: true, obReason: '',
+      pledge: 0, battle: null, fail: null, sheet: false, locked: false,
+      pinInput: '', pinNew: '', toast: '', qTag: '전체', speakingId: 0,
+      s: this.load()
+    };
+  }
+  def() {
+    return { onboarded: false, fields: [], reason: '', risk: [], notif: true, streakStart: null, totalPast: 0, longest: 0, power: 0, conv: 0, events: {}, saved: [], lastFail: null, pendingCheck: null, missionDone: '', pin: '', notifText: '수련 시간이다' };
+  }
+  load() {
+    try { return Object.assign(this.def(), JSON.parse(localStorage.getItem('choin_v1') || '{}')); } catch (e) { return this.def(); }
+  }
+  mut(fn) {
+    const s = Object.assign({}, this.state.s);
+    fn(s);
+    this.setState({ s });
+    try { localStorage.setItem('choin_v1', JSON.stringify(s)); } catch (e) {}
+  }
+  componentDidMount() {
+    this._onR = () => this.setState({ w: window.innerWidth });
+    window.addEventListener('resize', this._onR);
+    if (this.state.s.pin) this.setState({ locked: true });
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this._onR);
+    clearInterval(this._bt); clearInterval(this._pl); clearTimeout(this._tt);
+  }
+  dkey(t) { const d = new Date(t); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  days() {
+    const st = this.state.s.streakStart;
+    if (!st) return 0;
+    const a = new Date(st); a.setHours(0, 0, 0, 0);
+    const b = new Date(); b.setHours(0, 0, 0, 0);
+    return Math.round((b - a) / 864e5) + 1;
+  }
+  rankIdx(d) { let i = 0; this.RANKS.forEach((r, j) => { if (d >= r[0]) i = j; }); return i; }
+  showToast(m) { clearTimeout(this._tt); this.setState({ toast: m }); this._tt = setTimeout(() => this.setState({ toast: '' }), 2400); }
+  seconds() { return this.props.battleSeconds ?? 90; }
+  chips(list, sel, toggle) {
+    return list.map(name => {
+      const on = sel.includes(name);
+      return { name, bg: on ? '#3a2517' : '#1c1917', bd: on ? '#c96f3b' : '#2a2521', col: on ? '#e8956a' : '#a89e8e', toggle: () => toggle(name) };
+    });
+  }
+  markEvent(s, kind) {
+    const k = this.dkey(Date.now());
+    const cur = s.events[k];
+    if (cur === 'fail') return;
+    if (kind === 'battle' && (cur === 'conv')) return;
+    s.events = Object.assign({}, s.events, { [k]: kind });
+  }
+  speak(q) {
+    try {
+      window.speechSynthesis.cancel();
+      if (this.state.speakingId === q.id) { this.setState({ speakingId: 0 }); return; }
+      const u = new SpeechSynthesisUtterance(q.text);
+      u.lang = 'ko-KR'; u.rate = 0.92; u.pitch = 0.8;
+      u.onend = () => this.setState({ speakingId: 0 });
+      window.speechSynthesis.speak(u);
+      this.setState({ speakingId: q.id });
+    } catch (e) { this.showToast('이 기기에서는 음성을 지원하지 않는다'); }
+  }
+  seedDemo() {
+    const s = this.def();
+    const now = Date.now();
+    s.onboarded = true;
+    s.fields = ['운동', '독서'];
+    s.risk = ['심야', '주말'];
+    s.reason = '아침에 후회하지 않는 사람이 되고 싶다.';
+    s.streakStart = now - 13 * 864e5;
+    s.totalPast = 27; s.longest = 21; s.power = 780; s.conv = 23;
+    s.lastFail = now - 14 * 864e5;
+    const ev = {};
+    ev[this.dkey(now - 14 * 864e5)] = 'fail';
+    ev[this.dkey(now - 27 * 864e5)] = 'fail';
+    [1, 3, 4, 6, 9, 11].forEach(i => { ev[this.dkey(now - i * 864e5)] = 'conv'; });
+    [2, 8].forEach(i => { ev[this.dkey(now - i * 864e5)] = 'battle'; });
+    s.events = ev;
+    s.saved = [2];
+    this.setState({ s });
+    try { localStorage.setItem('choin_v1', JSON.stringify(s)); } catch (e) {}
+  }
+  startBattle() { this.setState({ battle: { phase: 'awaken', t: this.seconds() } }); }
+  battleBegin() {
+    this.setState({ battle: { phase: 'focus', t: this.seconds() } });
+    clearInterval(this._bt);
+    this._bt = setInterval(() => {
+      const b = this.state.battle;
+      if (!b || b.phase !== 'focus') { clearInterval(this._bt); return; }
+      if (b.t <= 1) { clearInterval(this._bt); this.setState({ battle: { phase: 'move', t: 0 } }); }
+      else this.setState({ battle: Object.assign({}, b, { t: b.t - 1 }) });
+    }, 1000);
+  }
+  battleToAction() {
+    const f = this.state.s.fields.length ? this.state.s.fields : this.FIELDS;
+    const pool = [];
+    f.forEach(x => pool.push(...this.ACTIONS[x].map(a => ({ field: x, label: a }))));
+    const picks = [];
+    const seed = new Date().getDate();
+    for (let i = 0; i < Math.min(2, pool.length); i++) picks.push(pool[(seed + i * 3) % pool.length]);
+    picks.push({ field: '공통', label: this.COMMON[seed % this.COMMON.length] });
+    this.setState({ battle: { phase: 'action', t: 0, actions: picks } });
+  }
+  pickAction(a) {
+    this.mut(s => { s.power += 30; s.conv += 1; s.pendingCheck = Date.now(); this.markEvent(s, 'conv'); });
+    this.setState({ battle: { phase: 'done', t: 0 } });
+  }
+  battleExit() {
+    const b = this.state.battle;
+    clearInterval(this._bt);
+    if (b && (b.phase === 'focus' || b.phase === 'move' || b.phase === 'action')) {
+      this.mut(s => this.markEvent(s, 'battle'));
+    }
+    this.setState({ battle: null });
+  }
+  openFail() { this.setState({ fail: { step: 1, type: '', causes: [] } }); }
+  failRecord() {
+    this.mut(s => {
+      const d = this.days();
+      s.totalPast += d; s.longest = Math.max(s.longest, d);
+      s.streakStart = null; s.lastFail = Date.now(); s.pendingCheck = null;
+      const k = this.dkey(Date.now());
+      s.events = Object.assign({}, s.events, { [k]: 'fail' });
+    });
+    this.setState({ fail: Object.assign({}, this.state.fail, { step: 3 }) });
+  }
+  failRestart() {
+    this.mut(s => { s.streakStart = Date.now(); });
+    this.setState({ fail: null });
+    this.showToast('즉시 복귀. 1일째가 다시 시작됐다');
+  }
+  finishOnboarding() {
+    clearInterval(this._pl);
+    this.mut(s => {
+      s.onboarded = true; s.streakStart = Date.now();
+      s.fields = this.state.obFields.length ? this.state.obFields : ['운동'];
+      s.risk = this.state.obRisk; s.notif = this.state.obNotif; s.reason = this.state.obReason;
+    });
+    this.setState({ pledge: 0, screen: 'home' });
+  }
+  pledgeStart() {
+    clearInterval(this._pl);
+    this._pl = setInterval(() => {
+      const p = this.state.pledge + 2.2;
+      if (p >= 100) { this.finishOnboarding(); }
+      else this.setState({ pledge: p });
+    }, 30);
+  }
+  pledgeEnd() { clearInterval(this._pl); if (this.state.pledge < 100) this.setState({ pledge: 0 }); }
+  calendar() {
+    const now = new Date();
+    const y = now.getFullYear(), m = now.getMonth();
+    const first = new Date(y, m, 1).getDay();
+    const nDays = new Date(y, m + 1, 0).getDate();
+    const s = this.state.s;
+    const streakStartKey = s.streakStart ? this.dkey(s.streakStart) : null;
+    const todayKey = this.dkey(Date.now());
+    const cells = [];
+    for (let i = 0; i < first; i++) cells.push({ n: '', sym: '', bg: 'transparent', numCol: 'transparent', symCol: 'transparent' });
+    for (let d = 1; d <= nDays; d++) {
+      const k = y + '-' + String(m + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+      const ev = s.events[k];
+      const isToday = k === todayKey;
+      let sym = '', symCol = '#6b6357', bg = isToday ? '#26201b' : '#171513';
+      const inStreak = streakStartKey && k >= streakStartKey && k <= todayKey;
+      if (ev === 'fail') { sym = '✕'; symCol = '#b0523a'; }
+      else if (ev === 'conv') { sym = '◆'; symCol = '#c96f3b'; }
+      else if (ev === 'battle') { sym = '○'; symCol = '#7d8a6a'; }
+      else if (inStreak) { sym = '●'; symCol = '#cfc6b6'; }
+      if (k > todayKey) { bg = 'transparent'; }
+      cells.push({ n: String(d), sym, bg, numCol: isToday ? '#e8956a' : (k > todayKey ? '#3a332c' : '#6b6357'), symCol });
+    }
+    return cells;
+  }
+  renderVals() {
+    const st = this.state, s = st.s;
+    const d = this.days();
+    const ri = this.rankIdx(d);
+    const nextGate = this.GATES.find(g => g.d > d) || this.GATES[this.GATES.length - 1];
+    const b = st.battle, f = st.fail;
+    const isReturn = !!(s.streakStart && s.lastFail && (s.streakStart - s.lastFail) < 864e5 && (s.streakStart - s.lastFail) > 0 && d <= 1);
+    const fields = s.fields.length ? s.fields : this.FIELDS;
+    const doy = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 864e5);
+    const mPool = [];
+    fields.forEach(x => this.ACTIONS[x].forEach(a => mPool.push({ field: x, label: a })));
+    const mission = mPool[doy % mPool.length];
+    const missionDone = s.missionDone === this.dkey(Date.now());
+    const elapsed = b ? (this.seconds() - b.t) : 0;
+    const allTags = ['전체', '습관', '충동', '환경', '수면', '복귀', '지루함', '위기'];
+    const quotes = this.QUOTES.filter(q => st.qTag === '전체' || q.tags.includes(st.qTag));
+    const auraByRank = [0.25, 0.4, 0.55, 0.7, 0.85, 1];
+    const aura = (this.props.mascotAura === '최대') ? 1 : auraByRank[ri];
+    const trainRows = [];
+    fields.forEach(x => this.ACTIONS[x].slice(0, 2).forEach(a => trainRows.push({
+      field: x, label: a,
+      run: () => { this.mut(ss => { ss.power += 15; ss.conv += 1; this.markEvent(ss, 'conv'); }); this.showToast('+15 초인력 — 전환 기록됨'); }
+    })));
+    const pin = st.pinInput;
+    return {
+      locked: st.locked,
+      pinDots: [0, 1, 2, 3].map(i => ({ bg: i < pin.length ? '#c96f3b' : 'transparent' })),
+      pinKeys: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0', '←'].map(k => ({
+        label: k,
+        press: () => {
+          if (!k) return;
+          let p = k === '←' ? pin.slice(0, -1) : (pin + k).slice(0, 4);
+          if (p.length === 4) {
+            if (p === s.pin) { this.setState({ locked: false, pinInput: '' }); return; }
+            this.showToast('틀렸다. 다시.'); p = '';
+          }
+          this.setState({ pinInput: p });
+        }
+      })),
+      showOb: !s.onboarded && !st.locked,
+      showApp: s.onboarded && !st.locked,
+      obDots: [1, 2, 3, 4, 5].map(i => ({ bg: i <= st.obStep ? '#c96f3b' : '#2a2521' })),
+      ob1: st.obStep === 1, ob2: st.obStep === 2, ob3: st.obStep === 3, ob4: st.obStep === 4, ob5: st.obStep === 5,
+      obNext: () => this.setState({ obStep: st.obStep + 1 }),
+      obNext3: () => { if (!st.obFields.length) { this.showToast('최소 한 분야는 골라라'); return; } this.setState({ obStep: 4 }); },
+      seedDemo: () => this.seedDemo(),
+      obFieldChips: this.chips(this.FIELDS, st.obFields, n => this.setState({ obFields: st.obFields.includes(n) ? st.obFields.filter(x => x !== n) : [...st.obFields, n] })),
+      obRiskChips: this.chips(['심야', '아침', '스트레스 후', '주말', '혼자 있을 때'], st.obRisk, n => this.setState({ obRisk: st.obRisk.includes(n) ? st.obRisk.filter(x => x !== n) : [...st.obRisk, n] })),
+      obNotif: st.obNotif, obNotifBg: st.obNotif ? '#8a3d24' : '#2a2521', obNotifKnob: st.obNotif ? '25px' : '3px',
+      obToggleNotif: () => this.setState({ obNotif: !st.obNotif }),
+      obNotifText: s.notifText,
+      obReason: st.obReason, setObReason: e => this.setState({ obReason: e.target.value }),
+      pledgeW: Math.min(100, st.pledge) + '%',
+      pledgeLabel: st.pledge > 0 ? '놓지 마라…' : '길게 눌러 서약한다',
+      pledgeStart: e => { e.preventDefault(); this.pledgeStart(); },
+      pledgeEnd: () => this.pledgeEnd(),
+      navHome: st.screen === 'home', navTrain: st.screen === 'train', navQuotes: st.screen === 'quotes', navJourney: st.screen === 'journey',
+      navItems: [['오늘', 'home'], ['수련', 'train'], ['계시', 'quotes'], ['여정', 'journey']].map(([label, key]) => ({
+        label, go: () => this.setState({ screen: key }),
+        dot: st.screen === key ? '#c96f3b' : 'transparent',
+        col: st.screen === key ? '#eae2d3' : '#6b6357',
+        wt: st.screen === key ? 800 : 500
+      })),
+      dayLabel: d > 0 ? d + '일째' : '대기 중',
+      rankName: this.RANKS[ri][1],
+      nextGateLabel: d >= 365 ? '모든 관문 통과' : '다음 관문 ' + nextGate.d + '일까지 ' + (nextGate.d - d) + '일',
+      isReturn,
+      auraOp: aura,
+      dailyLine: this.LINES[doy % this.LINES.length],
+      hasCheck: !!s.pendingCheck,
+      checkGone: () => { this.mut(ss => { ss.power += 10; ss.pendingCheck = null; }); this.showToast('지배 완료. +10 초인력'); },
+      checkStill: () => { this.mut(ss => { ss.pendingCheck = null; }); this.startBattle(); },
+      statCards: [
+        { label: '총 무결일', val: (s.totalPast + d) + '일', col: '#eae2d3' },
+        { label: '초인력', val: String(s.power), col: '#c96f3b' },
+        { label: '전환', val: s.conv + '회', col: '#eae2d3' },
+        { label: '최장', val: Math.max(s.longest, d) + '일', col: '#eae2d3' }
+      ],
+      missionField: mission.field, missionText: mission.label,
+      missionDone, missionOpen: !missionDone,
+      missionCol: missionDone ? '#6b6357' : '#eae2d3',
+      doMission: () => { this.mut(ss => { ss.power += 20; ss.missionDone = this.dkey(Date.now()); this.markEvent(ss, 'conv'); }); this.showToast('임무 완료. +20 초인력'); },
+      startBattle: () => this.startBattle(),
+      openFail: () => this.openFail(),
+      openSettings: () => this.setState({ sheet: true, pinNew: '' }),
+      trainRows,
+      tagChips: allTags.map(name => ({
+        name, pick: () => this.setState({ qTag: name }),
+        bg: st.qTag === name ? '#3a2517' : '#1c1917', bd: st.qTag === name ? '#c96f3b' : '#2a2521', col: st.qTag === name ? '#e8956a' : '#a89e8e'
+      })),
+      quoteCards: quotes.map(q => ({
+        text: q.text, title: q.title, date: q.date, nick: q.nick, url: q.url,
+        tags: q.tags.map(t => ({ name: t })),
+        speakLabel: st.speakingId === q.id ? '■ 멈춤' : '▶ 무명의 목소리',
+        speak: () => this.speak(q),
+        saveLabel: s.saved.includes(q.id) ? '저장됨' : '저장',
+        saveCol: s.saved.includes(q.id) ? '#c96f3b' : '#a89e8e',
+        save: () => this.mut(ss => { ss.saved = ss.saved.includes(q.id) ? ss.saved.filter(x => x !== q.id) : [...ss.saved, q.id]; }),
+        share: () => {
+          const txt = '"' + q.text + '" — 초인타임 오늘의 계시';
+          if (navigator.share) navigator.share({ text: txt }).catch(() => {});
+          else { navigator.clipboard && navigator.clipboard.writeText(txt); this.showToast('문장이 복사되었다'); }
+        }
+      })),
+      journeySub: d > 0 ? '현재 ' + d + '일째 · ' + this.RANKS[ri][1] : '아직 시작 전이다',
+      gateRows: this.GATES.map((g, i) => {
+        const done = d >= g.d;
+        const current = !done && (this.GATES.findIndex(x => x.d > d) === i);
+        return {
+          day: g.d, rank: g.r, quote: done || current ? g.quote : '아직 잠겨 있다',
+          current, line: i < this.GATES.length - 1,
+          dotBg: done ? '#c96f3b' : '#131110',
+          dotBd: done ? '#c96f3b' : (current ? '#c96f3b' : '#3a332c'),
+          dotGlow: current ? '0 0 12px rgba(201,111,59,.8)' : 'none',
+          lineBg: done ? '#8a3d24' : '#2a2521',
+          titleCol: done ? '#eae2d3' : (current ? '#e8956a' : '#5c554a'),
+          quoteCol: done || current ? '#a89e8e' : '#4a4238'
+        };
+      }),
+      calTitle: new Date().getFullYear() + '년 ' + (new Date().getMonth() + 1) + '월',
+      calCells: this.calendar(),
+      battleOn: !!b,
+      bTotal: this.seconds(),
+      bAwaken: !!b && b.phase === 'awaken',
+      bFocus: !!b && b.phase === 'focus',
+      bMove: !!b && b.phase === 'move',
+      bAction: !!b && b.phase === 'action',
+      bDone: !!b && b.phase === 'done',
+      bTime: b ? b.t : 0,
+      breathText: Math.floor(elapsed / 4) % 2 === 0 ? '들이쉬어라' : '내쉬어라',
+      battleBegin: () => this.battleBegin(),
+      battleToAction: () => this.battleToAction(),
+      bActions: (b && b.actions ? b.actions : []).map(a => ({ label: a.label, pick: () => this.pickAction(a) })),
+      battleExit: () => this.battleExit(),
+      failOn: !!f,
+      f1: !!f && f.step === 1, f2: !!f && f.step === 2, f3: !!f && f.step === 3,
+      failTypes: ['야한 콘텐츠 탐색', '자위', '둘 다'].map(label => ({
+        label, pick: () => this.setState({ fail: { step: 2, type: label, causes: [] } })
+      })),
+      causeChips: this.chips(this.CAUSES, f ? f.causes : [], n => {
+        const c = f.causes.includes(n) ? f.causes.filter(x => x !== n) : [...f.causes, n];
+        this.setState({ fail: Object.assign({}, f, { causes: c }) });
+      }),
+      failRecord: () => this.failRecord(),
+      failRestart: () => this.failRestart(),
+      failClose: () => this.setState({ fail: null }),
+      powerVal: s.power, convVal: s.conv, longestVal: s.longest,
+      sheetOn: st.sheet,
+      closeSettings: () => this.setState({ sheet: false }),
+      stop: e => e.stopPropagation(),
+      pinNew: st.pinNew, setPinNew: e => this.setState({ pinNew: e.target.value.replace(/\D/g, '').slice(0, 4) }),
+      pinPlaceholder: s.pin ? '설정됨 — 변경하려면 입력' : '미설정',
+      hasPin: !!s.pin,
+      savePin: () => {
+        if (st.pinNew.length !== 4) { this.showToast('4자리 숫자가 필요하다'); return; }
+        this.mut(ss => { ss.pin = st.pinNew; }); this.setState({ pinNew: '' }); this.showToast('PIN이 설정되었다');
+      },
+      clearPin: () => { this.mut(ss => { ss.pin = ''; }); this.showToast('PIN이 해제되었다'); },
+      notifText: s.notifText, setNotifText: e => { const v = e.target.value; this.mut(ss => { ss.notifText = v; }); },
+      resetAll: () => {
+        this.mut(ss => Object.assign(ss, this.def()));
+        this.setState({ sheet: false, obStep: 1, screen: 'home' });
+        this.showToast('모든 기록이 초기화되었다');
+      },
+      exportData: () => {
+        try {
+          const data = localStorage.getItem('choin_v1') || '{}';
+          const blob = new Blob([data], { type: 'application/json' });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'choin-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+          this.showToast('백업 파일이 저장되었다');
+        } catch (e) { this.showToast('백업 실패'); }
+      },
+      importData: () => {
+        const inp = document.createElement('input');
+        inp.type = 'file'; inp.accept = '.json,application/json';
+        inp.onchange = () => {
+          const file = inp.files && inp.files[0]; if (!file) return;
+          const rd = new FileReader();
+          rd.onload = () => {
+            try {
+              const d = JSON.parse(String(rd.result));
+              if (typeof d !== 'object' || d === null) throw 0;
+              this.mut(ss => Object.assign(ss, this.def(), d));
+              this.setState({ sheet: false });
+              this.showToast('복원 완료');
+            } catch (e) { this.showToast('파일을 읽을 수 없다'); }
+          };
+          rd.readAsText(file);
+        };
+        inp.click();
+      },
+      hasToast: !!st.toast, toastMsg: st.toast,
+      isDesktop: st.w >= 1024
+    };
+  }
+}
+</script>
+</body>
+</html>
